@@ -1,0 +1,30 @@
+<ion-menu id="sidenav" [content]="content">
+    <ion-header>
+  <ion-toolbar>
+    <ion-title>Menu</ion-title>
+  </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button  ion-item  (click)="openPage('HomePage')">
+        Home
+      </button>
+      <button  ion-item  (click)="openPage('ApproveUsersPage')">
+          Approve Users
+          <ion-badge *ngIf="userprovider.newusers.length">
+              {{userprovider.newusers.length}}
+          </ion-badge>
+      </button>
+      <button  ion-item  (click)="openPage('HomePage')">
+           About Us
+      </button>
+      <button  ion-item  (click)="openPage('HomePage')">
+              Contact Us
+      </button>
+      <button menuClose ion-item (click)="logout()">
+        Log Out
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-nav id="nav" [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

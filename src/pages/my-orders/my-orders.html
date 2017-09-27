@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>
+      My Orders
+    </ion-title>
+    <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
+        <button  (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
+            <ion-icon name='list'></ion-icon>
+            <ion-badge *ngIf="cartprovider.new_orders">
+                {{cartprovider.new_orders}}
+              </ion-badge>
+          </button>
+      <button (click)="openAdmin()" ion-button icon-only>
+      <ion-icon name='settings'></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content  padding>
+    <ion-card *ngFor="let c of cartprovider.myorders">
+      <ion-row>
+          <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+              <button type="button" (click)="toggleSection(c.id)"  ion-item  detail-none>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 1" color="warning">New</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 2" color="warning">Started</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 3" color="warning">Ready to Pickup</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 4" color="secondary">Completed</ion-badge>
+          <ion-badge item-right *ngIf="c.total">
+              Q {{c.total}}
+            </ion-badge>
+                  <ion-icon item-right name="arrow-down" *ngIf="!sections_open[c.id]"></ion-icon>
+                  <ion-icon item-right name="arrow-up" *ngIf="sections_open[c.id]"></ion-icon>
+                  <h2>
+                     Order Details</h2>
+                </button>
+            </ion-col>
+      </ion-row>
+      <ion-card-content>
+      <ion-row  *ngIf="sections_open[c.id]">
+          <ion-col  *ngFor="let y of c.full_record.title;let i = index;" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+              <h2>{{y}}</h2>
+
+                <ion-badge color="danger" *ngFor="let z of c.full_record.no[i]">
+                  {{z}}&nbsp;
+                </ion-badge>
+                <ion-badge color="secondary" *ngFor="let w of c.full_record.extra[i]">
+                    {{w}}&nbsp;
+                  </ion-badge>
+          </ion-col>
+      </ion-row>
+
+      <ion-row>
+          <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+            Created on {{c.create_label}}
+            </ion-col>
+      </ion-row>
+      </ion-card-content>
+     </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+    <ion-row>
+      <ion-col (click)="navCtrl.setRoot('HomePage')" class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
+        <ion-icon name='paper'></ion-icon>
+        News
+      </ion-col>
+      <ion-col (click)="navCtrl.setRoot('MenuPage')"   class="  navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
+        <ion-icon name='menu'></ion-icon>
+        Menu
+      </ion-col>
+      <ion-col  class="selected_tab navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
+        <ion-icon name='pizza'></ion-icon>
+        My Orders
+        <ion-badge *ngIf="cartprovider.my_new_orders">
+            {{cartprovider.my_new_orders}}
+        </ion-badge>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  </ion-toolbar>
+</ion-footer>

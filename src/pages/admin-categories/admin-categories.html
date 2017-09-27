@@ -1,0 +1,35 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Admin your Categories</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+     <ion-item-sliding *ngFor="let c of menuprovider.categories"  >
+      <ion-item>
+        <ion-avatar *ngIf="c.full_record.image_url" item-start>
+          <img src="{{c.full_record.image_url}}">
+        </ion-avatar>
+        <h2>{{c.name}}</h2>
+      </ion-item>
+      <ion-item-options>
+        
+        <button ion-button color="primary" icon-start (click)="editCategory(c)">
+          <ion-icon name="build"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger" icon-start (click)="deleteCategory(c)">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab right bottom>
+    <button (click)="editCategory(0)" ion-fab color="secondary" ><ion-icon name="add"></ion-icon></button>
+    </ion-fab>
+</ion-content>

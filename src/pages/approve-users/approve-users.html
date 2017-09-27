@@ -1,0 +1,24 @@
+<ion-header>
+    <ion-navbar>
+      <button ion-button menuToggle icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+      <ion-title>
+        New Users
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  
+  <ion-content padding>
+    <ion-card *ngFor="let c of userprovider.newusers">
+    <ion-card-header>
+      {{c.name}} {{c.lastname}}
+    </ion-card-header>
+    <ion-card-content>
+      Email : {{c.emailaddress}}
+        <button (click)="approve(c)" ion-button class="submit-btn" full >Approve</button>
+      </ion-card-content>
+      
+  </ion-card>
+  </ion-content>

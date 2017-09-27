@@ -1,0 +1,67 @@
+<ion-header>
+    <ion-navbar>
+      <button ion-button menuToggle icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+      <ion-title>
+        Orders
+      </ion-title>
+      <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
+        
+        <button (click)="openAdmin()" ion-button icon-only>
+        <ion-icon name='settings'></ion-icon>
+      </button>
+      </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+  
+  
+  <ion-content  padding>
+      <ion-card *ngFor="let c of cartprovider.orders">
+        <ion-row>
+            <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+                <button type="button" (click)="toggleSection(c.id)"  ion-item  detail-none>
+                    <!--<ion-badge item-right *ngIf="c.full_record.stage == 1" color="secondary">New</ion-badge>
+                    <ion-badge item-right *ngIf="c.full_record.stage == 2" color="secondary">Started</ion-badge>
+                    <ion-badge item-right *ngIf="c.full_record.stage == 3" color="secondary">Ready to Pickup</ion-badge>-->
+                    <ion-badge item-right *ngIf="c.full_record.stage == 4" color="secondary">Completed</ion-badge>
+            <ion-badge item-right *ngIf="c.total">
+                Q {{c.total}}
+              </ion-badge>
+                    <h2>
+                       Order Details</h2>
+                  </button>
+              </ion-col>
+              <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+                  Ordered By : {{c.emailaddress}}
+              </ion-col>
+
+        </ion-row>
+        <ion-card-content>
+        <ion-row >
+            <ion-col  *ngFor="let y of c.full_record.title;let i = index;" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+                <h2>{{y}}</h2>
+  
+                  <ion-badge color="danger" *ngFor="let z of c.full_record.no[i]">
+                    {{z}}&nbsp;
+                  </ion-badge>
+                  <ion-badge color="warning" *ngFor="let w of c.full_record.extra[i]">
+                      {{w}}&nbsp;
+                    </ion-badge>
+            </ion-col>
+        </ion-row>
+  
+        <ion-row>
+            <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+              Created on:<br> {{c.create_label}} <br>
+              
+              </ion-col>
+              <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+                  <button ion-button (click)="advance(c)"  *ngIf="c.full_record.stage == 1" class="submit-btn" full >Start</button>
+                  <button ion-button (click)="advance(c)"  *ngIf="c.full_record.stage == 2" class="submit-btn" full >Ready to Pickup</button>
+                  <button ion-button (click)="advance(c)"  *ngIf="c.full_record.stage == 3" class="submit-btn" full >Complete</button>
+                  </ion-col>
+        </ion-row>
+        </ion-card-content>
+       </ion-card>
+  </ion-content>

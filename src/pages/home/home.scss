@@ -1,0 +1,14 @@
+page-home {
+
+}
+.navtab{
+border-left: 1px solid black;
+border-right: 1px solid black;
+cursor: pointer;
+}
+.selected_tab {
+    color: map-get($colors, primary);
+}
+.color_normal{
+    color: black !important;
+}

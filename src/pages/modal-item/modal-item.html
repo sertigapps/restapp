@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+     {{title}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button showWhen="browser"  (click)="dismiss()">
+        <span ion-text color="primary" >Cancel</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="submit()" #itemform="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="text" placeholder="Name" name="name" [(ngModel)]="item.full_record.name" required></ion-input>
+            </ion-item>
+          <ion-item>
+            <ion-label>Category</ion-label>
+            <ion-select name="category_id" required (ionChange)='updatesubcats()' [(ngModel)]="item.full_record.category_id" >
+              <ion-option value="{{c.id}}"  *ngFor="let c of menuprovider.categories" selected="{{item.full_record.category_id==c.id}}">{{c.name}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item [hidden]="!item.full_record.category_id">
+            <ion-label>Sub Category</ion-label>
+            <ion-select name="subcategory_id" [(ngModel)]="item.full_record.subcategory_id" >
+              <ion-option value="{{c.id}}"  *ngFor="let c of subcategories" selected="{{item.full_record.subcategory_id==c.id}}">{{c.name}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-grid>
+            <ion-row>
+            <ion-col [hidden]="item.full_record.menu_flag != 1" col-9 col-sm-9 col-md-9 col-lg-9 col-xl-6>
+                    <ion-label >Includes</ion-label>
+            </ion-col>
+
+            <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                   <button type="button" (click)="add_item()"  ion-button full color="secondary" item-end icon-only>
+                      <ion-icon clear  name="add-circle"></ion-icon>
+                    </button>
+            </ion-col>
+            </ion-row>
+          <ion-row  [hidden]="item.full_record.menu_flag != 1"  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
+            
+            <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
+              <ion-select class="myCustomSelect" (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="Cancel" okText="Done!">
+                <ion-option *ngFor="let c of menuprovider.items; let i = index;trackBy: customTrackBy" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
+              </ion-select>
+            </ion-col>
+            <ion-col *ngIf="item.full_record.included[i]" col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
+              <ion-select class="myCustomSelect" [(ngModel)]="item.full_record.included_types[i]" name="IncludedType{{i}}"  cancelText="Cancel" okText="Done!">
+                <ion-option  *ngFor="let c of menuprovider.getitem(item.full_record.included[i]).full_record.price_label; let i = index;trackBy: customTrackBy" value="{{c}}" >{{c}}</ion-option>
+              </ion-select>
+            </ion-col>
+            <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+              <button type="button" (click)="remove_item(i)" [hidden]="i==0" ion-button full color="danger" item-end icon-only>
+                <ion-icon clear  name="trash"></ion-icon>
+              </button>
+            </ion-col>
+
+          </ion-row>
+            <ion-label>Price(s)</ion-label>
+          <ion-row  *ngFor="let c of item.full_record.price_label; let i = index;trackBy: customTrackBy" >
+            
+            <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
+              <ion-input type="text" placeholder="Label" name="label{{i}}" [(ngModel)]="item.full_record.price_label[i]" required></ion-input>
+            </ion-col>
+            <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
+              <ion-input type="number" placeholder="Price" name="price{{i}}" [(ngModel)]="item.full_record.prices[i]" required></ion-input>
+            </ion-col>
+            <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+              <button type="button" (click)="add_price()" [hidden]="i!=0 || item.full_record.menu_flag == 1" ion-button full color="secondary" item-end icon-only>
+                <ion-icon clear  name="add-circle"></ion-icon>
+              </button>
+              <button type="button" (click)="remove_price(i)" [hidden]="i==0" ion-button full color="danger" item-end icon-only>
+                <ion-icon clear  name="trash"></ion-icon>
+              </button>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+          <ion-item [hidden]="item.full_record.menu_flag == 1">
+            <ion-label>Ingredients</ion-label>
+            <ion-select [(ngModel)]="item.full_record.ingredients" name="ingredients" multiple="true" cancelText="Cancel" okText="Done!">
+              <ion-option *ngFor="let c of menuprovider.ingredients; let i = index;trackBy: customTrackBy" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
+              
+            </ion-select>
+        </ion-item>
+            <ion-item>
+              <ion-textarea rows ="3" type="textarea" placeholder="Description" name="description" [(ngModel)]="item.full_record.description" ></ion-textarea>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid">{{title_button}}</button>
+        </ion-col>
+      </ion-row>
+      <ion-card>
+        <ion-card-content  >
+            <ion-slides id="slides"  [hidden]="!item.full_record.images" >
+              <ion-slide *ngFor="let c of item.full_record.images ; let i = index;" >
+                <img src="{{c}}">
+                <button type="button" (click)="remove_image(i)" ion-button  color="danger" item-end icon-only>
+                   <ion-icon clear  name="trash"></ion-icon>
+                </button>     
+              </ion-slide>
+            </ion-slides>
+        </ion-card-content>
+      </ion-card>
+    </form>
+    <ion-item>
+          
+          <button (click)="presentActionSheet()" ion-button full color="secondary" item-end icon-only>
+            <ion-icon clear  name="add-circle"></ion-icon>Image
+          </button>
+        </ion-item>
+</ion-content>

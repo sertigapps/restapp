@@ -1,0 +1,142 @@
+<!--
+  Generated template for the ShowItemPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{item.name}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <form (ngSubmit)="create_order()" #itemform="ngForm">
+      <ion-card>
+        <ion-card-content  >
+            <ion-slides id="slides"  *ngIf="item.full_record.images" >
+              <ion-slide *ngFor="let c of item.full_record.images ; let i = index;" >
+                <img src="{{c}}">    
+              </ion-slide>
+            </ion-slides>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <button type="button" (click)="toggleSection('description')"  ion-item  detail-none>
+                <ion-icon item-right name="arrow-forward" *ngIf="!sections_open['description']"></ion-icon>
+                <ion-icon item-right name="arrow-down" *ngIf="sections_open['description']"></ion-icon>
+                <h2>
+                  Description</h2>
+              </button>
+        </ion-card-header>
+        <ion-card-content *ngIf="sections_open['description']" >
+            <h3>{{item.full_record.description}}</h3>
+        </ion-card-content>
+      </ion-card>
+      <ion-card [hidden]="(item.full_record.menu_flag && item.full_record.menu_flag ==1 ) ||  item.full_record.price_label.length <2">
+          <ion-card-content >
+              <ion-item>
+                  <ion-label>Type</ion-label>
+                  <ion-select required class="myCustomSelect" (ngModelChange)="calculate_price($event)" [(ngModel)]="type_selected" name="type_selected"  cancelText="Cancel" okText="Done!">
+                    <ion-option *ngFor="let c of item.full_record.price_label" value="{{c}}" >{{c}}</ion-option> 
+                  </ion-select>
+              </ion-item>
+          </ion-card-content>
+
+        </ion-card>
+      <ion-card [hidden]="item.full_record.menu_flag && item.full_record.menu_flag ==1 ">
+        <ion-card-header>
+          <button type="button" (click)="toggleSection('ingredients')"  ion-item  detail-none>
+                <ion-icon item-right name="arrow-forward" *ngIf="!sections_open['ingredients']"></ion-icon>
+                <ion-icon item-right name="arrow-down" *ngIf="sections_open['ingredients']"></ion-icon>
+                <h2>
+                  Ingredients</h2>
+              </button>
+        </ion-card-header>
+        <ion-card-content *ngIf="sections_open['ingredients']" >
+          <ion-item>
+              <ion-label>Included</ion-label>
+              <ion-select [(ngModel)]="ingredients_selected" name="ingredients" multiple="true" cancelText="Cancel" okText="Done!">
+                <ion-option *ngFor="let c of ingredients" value="{{c}}" >{{c.split(',')[1]}}</ion-option> 
+              </ion-select>
+          </ion-item>
+          <ion-item>
+              <ion-label>Extra</ion-label>
+              <ion-select [(ngModel)]="extras_added" name="extras_added" multiple="true" cancelText="Cancel" okText="Done!">
+                <ion-option *ngFor="let c of extras" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
+                
+              </ion-select>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
+      <ion-card [hidden]="!item.full_record.menu_flag && !item.full_record.menu_flag ==1 ">
+        <ion-row *ngFor="let x of ingredients_menu;let i = index;">
+
+        <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+          <ion-card-header>
+            <button type="button" (click)="toggleSection('ingredients'+x.split(',')[0])"  ion-item  detail-none>
+                  <ion-icon item-right name="swap" *ngIf="!sections_open['ingredients'+x.split(',')[0]]"></ion-icon>
+                  <ion-icon item-right name="arrow-up" *ngIf="sections_open['ingredients'+x.split(',')[0]]"></ion-icon>
+                  <h2>
+                     {{x.split(',')[1]}}</h2>
+                </button>
+          </ion-card-header>
+        </ion-col>
+
+        <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+          <ion-card-content *ngIf="sections_open['ingredients'+x.split(',')[0]]" >
+              <ion-item *ngIf="item_type[x.split(',')[0]].length>1">
+                  <ion-label>Included</ion-label>
+                  <ion-select class="myCustomSelect" (ngModelChange)="calculate_price_menu($event,x,i)" [(ngModel)]="item_type_selected[x.split(',')[0]]" name="ingredients_included_{{x.split(',')[0]}}"  cancelText="Cancel" okText="Done!">
+                    <ion-option *ngFor="let c of item_type[x.split(',')[0]]" value="{{c}}" >{{c}}</ion-option> 
+                  </ion-select>
+              </ion-item>
+            <ion-item>
+                <ion-label>Ing. Included</ion-label>
+                <ion-select class="myCustomSelect" [(ngModel)]="ingredients_item_selected[x.split(',')[0]]" name="ingredients{{x.split(',')[0]}}" multiple="true" cancelText="Cancel" okText="Done!">
+                  <ion-option *ngFor="let c of ingredients_item[x.split(',')[0]]" value="{{c}}" >{{c.split(',')[1]}}</ion-option> 
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Extra</ion-label>
+                <ion-select class="myCustomSelect" [(ngModel)]="extras_item_added[x.split(',')[0]]" name="extras_added{{x.split(',')[0]}}" multiple="true" cancelText="Cancel" okText="Done!">
+                  <ion-option *ngFor="let c of extras_item[x.split(',')[0]]" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
+                  
+                </ion-select>
+            </ion-item>
+
+          </ion-card-content>
+        </ion-col>
+      </ion-row>
+        
+      </ion-card>
+      <ion-card >
+        <ion-row>
+          <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+              <ion-card-header>
+              Total
+              </ion-card-header>
+          </ion-col>
+          <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+            <ion-card-header text-right>
+               Q {{current_total}}
+            </ion-card-header>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+              <button  ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid">
+                  <ion-icon item-right name="cart" ></ion-icon>
+                  Order</button>
+            </ion-col>
+            </ion-row>
+      </ion-card>
+</form>
+</ion-content>

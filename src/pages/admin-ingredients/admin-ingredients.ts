@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams ,AlertController} from 'ionic-angul
 import { ModalController } from 'ionic-angular';
 import { MenuProvider } from '../../providers/menu/menu';
 import { UserProvider } from '../../providers/user/user';
+import { TranslationPipe } from "../../pipes/translation/translation";
 
 /**
  * Generated class for the AdminCategoriesPage page.
@@ -17,7 +18,7 @@ import { UserProvider } from '../../providers/user/user';
   templateUrl: 'admin-ingredients.html',
 })
 export class AdminIngredientsPage {
-  constructor(public menuprovider:MenuProvider, private alertCtrl: AlertController,public userprovider: UserProvider,public modalCtrl: ModalController,public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public translate : TranslationPipe,public menuprovider:MenuProvider, private alertCtrl: AlertController,public userprovider: UserProvider,public modalCtrl: ModalController,public navCtrl: NavController, public navParams: NavParams) {
     
   }
 
@@ -37,18 +38,18 @@ export class AdminIngredientsPage {
   }
   public deleteIngredient(ing){
     let alert = this.alertCtrl.create({
-      title: 'Are you sure you want to delete ?',
-      subTitle: 'This ingredient will not be available to use anymore',
+      title: this.translate.transform ( 'confirm_delete'),
+      subTitle:this.translate.transform ( 'delete_ing_msg') ,
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translate.transform ( 'cancel'),
           role: 'cancel',
           handler: () => {
             //console.log('Cancel clicked');
           }
         },
         {
-          text: 'OK',
+          text: this.translate.transform ( 'ok'),
           handler: data => {
             this.menuprovider.deleteingredient(ing,this.userprovider.emailaddress,this.userprovider.token);
           }

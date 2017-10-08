@@ -16,6 +16,7 @@ export class CartProvider {
   orders_indexed:any={};
   orders: Array<Order> = [];
   my_new_orders:number;
+  loaded_prev:boolean;
   new_orders:number=0;
   last_loaded:number;
   constructor(public http: Http) {
@@ -25,9 +26,42 @@ export class CartProvider {
     this.myorders.push(new Order(data.id,data.emailaddress,data.personid,data.create_date,data.total,data,this.http));
     this.my_new_orders = this.myorders.filter((o)=>{return o.full_record.status_code == 1 }).length;
   }
+  get_user_orders(emailaddress){
+    return this.http.get(this.url+'query/order/emailaddress/'+emailaddress+'/EQ/status_code/0/GT')
+    .map(res => res.json());
+  }
   fetch_my_orders(emailaddress){
     this.http.get(this.url+'query/order/emailaddress/'+emailaddress+'/EQ/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
+      data.forEach(c=>{
+        this.myorders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
+        this.orders_indexed[c.id]=true;
+      });
+      this.my_new_orders = this.myorders.filter((o)=>{return o.full_record.stage < 4 }).length;
+      this.myorders.sort((a,b)=>{
+        return a.create_date - b.create_date;
+      });
+    });
+  }
+  fetch_my_prev_orders(emailaddress){
+    this.http.get(this.url+'query/order/emailaddress/'+emailaddress+'/EQ/status_code/2/EQ')
+    .map(res => res.json()).subscribe(data=>{
+      this.myorders =this.myorders.filter((o)=>{return o.full_record.status_code == 1 });
+      data.forEach(c=>{
+        this.myorders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
+        this.orders_indexed[c.id]=true;
+      });
+      this.my_new_orders = this.myorders.filter((o)=>{return o.full_record.stage < 4 }).length;
+      this.myorders.sort((a,b)=>{
+        return a.create_date - b.create_date;
+      });
+      this.loaded_prev = true;
+    });
+  }
+  refresh_my_orders(emailaddress){
+    this.http.get(this.url+'query/order/emailaddress/'+emailaddress+'/EQ/status_code/1/EQ')
+    .map(res => res.json()).subscribe(data=>{
+      this.myorders =this.myorders.filter((o)=>{return o.full_record.status_code == 2 });
       data.forEach(c=>{
         this.myorders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
         this.orders_indexed[c.id]=true;
@@ -57,8 +91,9 @@ export class CartProvider {
   }
   
   fetch_more_orders(){
+    this.orders =[];
     this.last_loaded = (new Date()).getTime()-36000;
-    return this.http.get(this.url+'query/order/status_code/1/EQ/create_date/'+this.last_loaded+'/GT')
+    return this.http.get(this.url+'query/order/status_code/1/EQ/create_date/0/GT')
     .map(res => res.json())
   }
   place_order_request(order,emailaddress,token){
@@ -78,7 +113,8 @@ export class CartProvider {
     let data = {
       "to": "/topics/neworder",
       "data": {
-        "message": "New Order Received",
+        "message": "Nueva Orden Recibida",
+        "note_type": "New Order Received",
         "emailaddress": emailaddress
        }
     };

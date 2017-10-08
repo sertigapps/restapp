@@ -1,17 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-     {{title}}
+     {{title|translation}}
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
-        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <span ion-text color="primary" showWhen="ios">{{'cancel'|translation}}</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
       <button showWhen="browser"  (click)="dismiss()">
-        <span ion-text color="primary" >Cancel</span>
+        <span ion-text color="primary" >{{'cancel'|translation}}</span>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -23,16 +23,16 @@
         <ion-col>
           <ion-list inset>
             <ion-item>
-              <ion-input type="text" placeholder="Name" name="name" [(ngModel)]="item.full_record.name" required></ion-input>
+              <ion-input type="text" placeholder="{{'name'|translation}}" name="name" [(ngModel)]="item.full_record.name" required></ion-input>
             </ion-item>
           <ion-item>
-            <ion-label>Category</ion-label>
+            <ion-label>{{'category'|translation}}</ion-label>
             <ion-select name="category_id" required (ionChange)='updatesubcats()' [(ngModel)]="item.full_record.category_id" >
               <ion-option value="{{c.id}}"  *ngFor="let c of menuprovider.categories" selected="{{item.full_record.category_id==c.id}}">{{c.name}}</ion-option>
             </ion-select>
           </ion-item>
           <ion-item [hidden]="!item.full_record.category_id">
-            <ion-label>Sub Category</ion-label>
+            <ion-label>{{'sub_category'|translation}}</ion-label>
             <ion-select name="subcategory_id" [(ngModel)]="item.full_record.subcategory_id" >
               <ion-option value="{{c.id}}"  *ngFor="let c of subcategories" selected="{{item.full_record.subcategory_id==c.id}}">{{c.name}}</ion-option>
             </ion-select>
@@ -40,7 +40,7 @@
           <ion-grid>
             <ion-row>
             <ion-col [hidden]="item.full_record.menu_flag != 1" col-9 col-sm-9 col-md-9 col-lg-9 col-xl-6>
-                    <ion-label >Includes</ion-label>
+                    <ion-label >{{'includes'|translation}}</ion-label>
             </ion-col>
 
             <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
@@ -52,12 +52,12 @@
           <ion-row  [hidden]="item.full_record.menu_flag != 1"  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
             
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-select class="myCustomSelect" (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="Cancel" okText="Done!">
+              <ion-select class="myCustomSelect" (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option *ngFor="let c of menuprovider.items; let i = index;trackBy: customTrackBy" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
               </ion-select>
             </ion-col>
             <ion-col *ngIf="item.full_record.included[i]" col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-select class="myCustomSelect" [(ngModel)]="item.full_record.included_types[i]" name="IncludedType{{i}}"  cancelText="Cancel" okText="Done!">
+              <ion-select class="myCustomSelect" [(ngModel)]="item.full_record.included_types[i]" name="IncludedType{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option  *ngFor="let c of menuprovider.getitem(item.full_record.included[i]).full_record.price_label; let i = index;trackBy: customTrackBy" value="{{c}}" >{{c}}</ion-option>
               </ion-select>
             </ion-col>
@@ -68,14 +68,17 @@
             </ion-col>
 
           </ion-row>
-            <ion-label>Price(s)</ion-label>
+          <ion-item>
+              <ion-input type="text" placeholder="{{'label_type'|translation}}" name="label_type" [(ngModel)]="item.full_record.label_type" ></ion-input>
+            </ion-item>
+            <ion-label>{{'price_s'|translation}}</ion-label>
           <ion-row  *ngFor="let c of item.full_record.price_label; let i = index;trackBy: customTrackBy" >
             
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-input type="text" placeholder="Label" name="label{{i}}" [(ngModel)]="item.full_record.price_label[i]" required></ion-input>
+              <ion-input type="text" placeholder="{{'label'|translation}}" name="label{{i}}" [(ngModel)]="item.full_record.price_label[i]" required></ion-input>
             </ion-col>
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-input type="number" placeholder="Price" name="price{{i}}" [(ngModel)]="item.full_record.prices[i]" required></ion-input>
+              <ion-input type="number" placeholder="{{'price'|translation}}" name="price{{i}}" [(ngModel)]="item.full_record.prices[i]" required></ion-input>
             </ion-col>
             <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
               <button type="button" (click)="add_price()" [hidden]="i!=0 || item.full_record.menu_flag == 1" ion-button full color="secondary" item-end icon-only>
@@ -89,21 +92,31 @@
           </ion-row>
         </ion-grid>
           <ion-item [hidden]="item.full_record.menu_flag == 1">
-            <ion-label>Ingredients</ion-label>
-            <ion-select [(ngModel)]="item.full_record.ingredients" name="ingredients" multiple="true" cancelText="Cancel" okText="Done!">
+            <ion-label>{{'ingredients'|translation}}</ion-label>
+            <ion-select [(ngModel)]="item.full_record.ingredients" name="ingredients" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
               <ion-option *ngFor="let c of menuprovider.ingredients; let i = index;trackBy: customTrackBy" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
               
             </ion-select>
         </ion-item>
+        <ion-item>
+          <ion-input type="number" placeholder="{{'order_1'|translation}}" name="order" [(ngModel)]="item.full_record.order" ></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>{{'visible'|translation}}</ion-label>
+            <ion-select [(ngModel)]="item.full_record.visible" name="visibility" >
+              <ion-option value="-1" >{{'no'|translation}}</ion-option>
+              <ion-option value="1" >{{'yes'|translation}}</ion-option>
+            </ion-select>
+        </ion-item>
             <ion-item>
-              <ion-textarea rows ="3" type="textarea" placeholder="Description" name="description" [(ngModel)]="item.full_record.description" ></ion-textarea>
+              <ion-textarea rows ="3" type="textarea" placeholder="{{'description'|translation}}" name="description" [(ngModel)]="item.full_record.description" ></ion-textarea>
             </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col class="signup-col">
-          <button ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid">{{title_button}}</button>
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid">{{title_button|translation}}</button>
         </ion-col>
       </ion-row>
       <ion-card>
@@ -122,7 +135,7 @@
     <ion-item>
           
           <button (click)="presentActionSheet()" ion-button full color="secondary" item-end icon-only>
-            <ion-icon clear  name="add-circle"></ion-icon>Image
+            <ion-icon clear  name="add-circle"></ion-icon>{{'image'|translation}}
           </button>
         </ion-item>
 </ion-content>

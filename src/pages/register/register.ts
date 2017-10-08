@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController,MenuController, AlertController, IonicPage, LoadingController } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
+import { TranslationPipe } from "../../pipes/translation/translation";
  
 @IonicPage()
 @Component({
@@ -11,25 +12,25 @@ export class RegisterPage {
   createSuccess = false;
   registerCredentials = { email: '', password: '' };  
  
-  constructor(public menu: MenuController,private nav: NavController, private auth: AuthServiceProvider, public loadingController:LoadingController,private alertCtrl: AlertController) {
+  constructor(public translate : TranslationPipe,public menu: MenuController,private nav: NavController, private auth: AuthServiceProvider, public loadingController:LoadingController,private alertCtrl: AlertController) {
     this.menu.enable(false, 'sidenav'); 
    }
  
   public register() {
-    let loading = this.loadingController.create({content : "Registering, please wait ....."});
+    let loading = this.loadingController.create({content : this.translate.transform('registering_message')});
     loading.present();
     this.auth.register(this.registerCredentials).subscribe(res => {
       loading.dismissAll();
       if (!res.errorMessage) {
         this.createSuccess = true;
-        this.showPopup("Success", "Account created.");
+        this.showPopup(this.translate.transform('success'), this.translate.transform('account_created'));
       } else {
-        this.showPopup(res.errorMessage, "Problem creating account.");
+        this.showPopup(res.errorMessage, this.translate.transform('problem_creating_account'));
       }
     },
       error => {
         loading.dismissAll();
-        this.showPopup("Error on Request", error);
+        this.showPopup(this.translate.transform('error_on_request'), this.translate.transform(error));
       });
   }
  

@@ -31,6 +31,12 @@ export class HomePage {
 public openAdmin(){
   this.navCtrl.push('AdminPage');
 }
+show_item_to_order(item_id,pricesale,label){
+
+  var it = this.menuprovider.getitem(item_id);
+  var price_sale = (pricesale)?pricesale:false;
+  this.navCtrl.push('ShowItemPage',{'item':it,'price':price_sale,'label':label})
+}
 
 
 

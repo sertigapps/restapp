@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Admin your Ingredients</ion-title>
+    <ion-title>{{'admin_your_ingredients'|translation}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -18,13 +18,13 @@
       </ion-item>
       <ion-item-options>
         
-        <button ion-button color="primary" icon-start (click)="editIngredient(c)">
+        <button ion-button color="azul" icon-start (click)="editIngredient(c)">
           <ion-icon name="build"></ion-icon>
-          Edit
+          {{'edit'|translation}}
         </button>
         <button ion-button color="danger" icon-start (click)="deleteIngredient(c)">
           <ion-icon name="trash"></ion-icon>
-          Delete
+          {{'delete'|translation}}
         </button>
       </ion-item-options>
     </ion-item-sliding>

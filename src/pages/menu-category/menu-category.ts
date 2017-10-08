@@ -33,28 +33,37 @@ export class MenuCategoryPage {
   this.subcats = this.menuprovider.sub_categories.filter((sc)=>{
     return sc.category_id == this.category.id;
   });
+  this.subcats.sort((a,b)=>{
+    return a.full_record.order - b.full_record.order;
+  });
   this.subcats.forEach((sc)=>{
     this.sc_items[sc.id] = this.menuprovider.items.filter((item)=>{
-      if(item.full_record.subcategory_id != sc.id){
+      if(item.full_record.subcategory_id != sc.id || item.full_record.visible==-1 ){
         return false;
       }
       this.item_ids[item.id]=true;
       return true;
     });
     this.sc_items[sc.id] = this.sc_items[sc.id].concat(this.menuprovider.menus.filter((item)=>{
-      if(item.full_record.subcategory_id != sc.id){
+      if(item.full_record.subcategory_id != sc.id || item.full_record.visible==-1){
         return false;
       }
       this.item_ids[item.id]=true;
       return true;
     }))
+    this.sc_items[sc.id].sort((a,b)=>{
+      return a.full_record.order - b.full_record.order;
+    });
   });
   this.items = this.menuprovider.items.filter((item)=>{
-    return   item.category_id == this.category.id && !this.item_ids[item.id] ;
+    return   item.category_id == this.category.id && !this.item_ids[item.id] && (!item.full_record.visible || item.full_record.visible==1);
   });
   this.items= this.items.concat( this.menuprovider.menus.filter((item)=>{
-    return   item.category_id == this.category.id && !this.item_ids[item.id] ;
+    return   item.category_id == this.category.id && !this.item_ids[item.id] && (!item.full_record.visible || item.full_record.visible==1) ;
   }));
+  this.items.sort((a,b)=>{
+    return a.full_record.order - b.full_record.order;
+  });
 }
 
   ionViewDidLoad() {

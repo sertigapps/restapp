@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Admin your Categories</ion-title>
+    <ion-title>{{'admin_your_cats' | translation }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -18,13 +18,13 @@
       </ion-item>
       <ion-item-options>
         
-        <button ion-button color="primary" icon-start (click)="editCategory(c)">
+        <button ion-button color="azul" icon-start (click)="editCategory(c)">
           <ion-icon name="build"></ion-icon>
-          Edit
+          {{'edit'|translation}}
         </button>
         <button ion-button color="danger" icon-start (click)="deleteCategory(c)">
           <ion-icon name="trash"></ion-icon>
-          Delete
+          {{'Borrar'|translation}}
         </button>
       </ion-item-options>
     </ion-item-sliding>

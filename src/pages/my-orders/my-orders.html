@@ -4,7 +4,7 @@
       <ion-icon name='menu'></ion-icon>
     </button>
     <ion-title>
-      My Orders
+      {{'my_orders'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
         <button  (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
@@ -22,28 +22,38 @@
 
 
 <ion-content  padding>
+
+    <ion-row [hidden]="cartprovider.loaded_prev">
+        <ion-col class="signup-col">
+          <button ion-button full (click)="load_prev_orders()" > {{'load_prev_orders'|translation}}</button>
+        </ion-col>
+        </ion-row>
     <ion-card *ngFor="let c of cartprovider.myorders">
       <ion-row>
           <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
               <button type="button" (click)="toggleSection(c.id)"  ion-item  detail-none>
-                  <ion-badge item-right *ngIf="c.full_record.stage == 1" color="warning">New</ion-badge>
-                  <ion-badge item-right *ngIf="c.full_record.stage == 2" color="warning">Started</ion-badge>
-                  <ion-badge item-right *ngIf="c.full_record.stage == 3" color="warning">Ready to Pickup</ion-badge>
-                  <ion-badge item-right *ngIf="c.full_record.stage == 4" color="secondary">Completed</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 5" color="danger"> {{'canceled'|translation}}</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 1" color="warning"> {{'new'|translation}}</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 2" color="warning"> {{'started'|translation}}</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 3" color="warning"> {{'ready_to_pickup'|translation}}</ion-badge>
+                  <ion-badge item-right *ngIf="c.full_record.stage == 4" color="secondary"> {{'completed'|translation}}</ion-badge>
           <ion-badge item-right *ngIf="c.total">
               Q {{c.total}}
             </ion-badge>
                   <ion-icon item-right name="arrow-down" *ngIf="!sections_open[c.id]"></ion-icon>
                   <ion-icon item-right name="arrow-up" *ngIf="sections_open[c.id]"></ion-icon>
                   <h2>
-                     Order Details</h2>
+                      {{'order_details'|translation}}</h2>
                 </button>
             </ion-col>
       </ion-row>
       <ion-card-content>
       <ion-row  *ngIf="sections_open[c.id]">
           <ion-col  *ngFor="let y of c.full_record.title;let i = index;" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
-              <h2>{{y}}</h2>
+              
+                 <p><ion-badge item-right color="azul" *ngIf="c.full_record.quantity">
+                    {{c.full_record.quantity}}
+                  </ion-badge>&nbsp;{{y}}</p>
 
                 <ion-badge color="danger" *ngFor="let z of c.full_record.no[i]">
                   {{z}}&nbsp;
@@ -54,13 +64,34 @@
           </ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row *ngIf="sections_open[c.id] && c.full_record.comment_order" >
           <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
-            Created on {{c.create_label}}
+              <p> {{c.full_record.comment_order}}</p>
+
+          </ion-col>
+      </ion-row>
+
+      <ion-row>
+          <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+              {{'created_on'|translation}} {{c.create_label}}
             </ion-col>
+            <ion-col *ngIf="c.full_record.estimated_time" col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+                {{'estimated_hour'|translation}} {{c.full_record.estimated_time}}
+              </ion-col>
+
+            <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+                <button ion-button (click)="cancel(c)" color="danger"  *ngIf="c.full_record.stage == 1" class="submit-btn" full >{{'cancel'|translation}}</button>
+              </ion-col>
       </ion-row>
       </ion-card-content>
      </ion-card>
+
+  <ion-fab right bottom>
+      <button (click)="refresh_my_orders()" ion-fab color="azul" ><ion-icon name="refresh"></ion-icon></button>
+      </ion-fab>
+      <ion-fab left bottom>
+          <button (click)="open_maps()" ion-fab color="azul" ><ion-icon name="pin"></ion-icon></button>
+          </ion-fab>
 </ion-content>
 <ion-footer>
   <ion-toolbar>
@@ -68,15 +99,15 @@
     <ion-row>
       <ion-col (click)="navCtrl.setRoot('HomePage')" class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='paper'></ion-icon>
-        News
+        {{'news'|translation}}
       </ion-col>
       <ion-col (click)="navCtrl.setRoot('MenuPage')"   class="  navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='menu'></ion-icon>
-        Menu
+        {{'menu'|translation}}
       </ion-col>
       <ion-col  class="selected_tab navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='pizza'></ion-icon>
-        My Orders
+        {{'my_orders'|translation}}
         <ion-badge *ngIf="cartprovider.my_new_orders">
             {{cartprovider.my_new_orders}}
         </ion-badge>

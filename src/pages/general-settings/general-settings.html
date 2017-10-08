@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-navbar>
+      <button ion-button menuToggle icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+      <ion-title>
+        {{'general_settings'|translation}}
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  
+  <ion-content padding>
+    <ion-card  *ngIf="loading_spinner" >
+      <ion-card-header>
+        {{'loading'|translation}} ....
+      </ion-card-header>
+    </ion-card>
+    <ion-card  *ngIf="!loading_spinner" >
+        <ion-item>
+            <ion-label> {{'enable'| translation}} {{'orders'| translation}}</ion-label>
+            <ion-toggle (ngModelChange)="update_order_store($event)" [(ngModel)]="orders_available"></ion-toggle>
+          </ion-item>
+        </ion-card>
+  </ion-content>
+ 

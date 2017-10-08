@@ -22,13 +22,15 @@ export class MenuProvider {
     .map(res => res.json()).subscribe(data=>{
       data.forEach(c=>{
         this.categories.push(new Category(c.id,c.name,c,this.http));
-      })
+      });
+      this.ordercategories();
     });
     this.http.get(this.url+'query/subcategory/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
       data.forEach(c=>{
         this.sub_categories.push(new SubCategory(c.id,c.category_id,c.name,c,this.http));
       });
+      this.orderscategories();
     });
     this.http.get(this.url+'query/item/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
@@ -46,6 +48,7 @@ export class MenuProvider {
       data.forEach(c=>{
           this.ingredients.push(new Ingredient(c.id,c.name,c,this.http));
       });
+      this.orderingredients();
     });
     this.http.get(this.url+'query/other/type/post/EQ/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
@@ -57,6 +60,21 @@ export class MenuProvider {
       })
     });
   }
+  ordercategories(){
+    this.categories.sort((a,b)=>{
+      return a.full_record.order -b.full_record.order;
+    })
+  }
+  orderscategories(){
+    this.sub_categories.sort((a,b)=>{
+      return a.full_record.order -b.full_record.order;
+    })
+  }
+  orderingredients(){
+    this.ingredients.sort((a,b)=>{
+      return a.full_record.order -b.full_record.order;
+    })
+  }
   getitem(id_name){
     var to_return : Item;
     var id = id_name.split(',')[0];
@@ -65,25 +83,44 @@ export class MenuProvider {
         to_return = new Item(i.id,i.category_id,i.name,i.full_record,this.http);
       }
     });
+    this.menus.forEach((i)=>{
+      if(i.id==id){
+        to_return = new Item(i.id,i.category_id,i.name,i.full_record,this.http);
+      }
+    });
+    return to_return;
+  }
+  getingredient(id_name){
+    var to_return : Ingredient;
+    var id = id_name.split(',')[0];
+    this.ingredients.forEach((i)=>{
+      if(i.id==id){
+        to_return = new Ingredient(i.id,i.name,i.full_record,this.http);
+      }
+    });
     return to_return;
   }
   insertcategory(category:Category){
     this.categories.push(category);
+    this.ordercategories();
   }
   insertscategory(scategory:SubCategory){
     this.sub_categories.push(scategory);
+    this.orderscategories();
   }
   updatecategory(id,attributes){
     this.categories = this.categories.filter(cat=>{
       return cat.id!=id;
     })
     this.categories.push(new Category(id,attributes.name,attributes,this.http));
+    this.ordercategories();
   }
   updatesubcategory(id,attributes){
     this.sub_categories = this.sub_categories.filter(cat=>{
       return cat.id!=id;
     })
     this.sub_categories.push(new SubCategory(id,attributes.category_id,attributes.name,attributes,this.http));
+    this.orderscategories();
   }
   updateitem(id,attributes){
     if(attributes.menu_flag && attributes.menu_flag ==1){
@@ -104,6 +141,7 @@ export class MenuProvider {
       return ing.id!=id;
     })
     this.ingredients.push(new Ingredient(id,attributes.name,attributes,this.http));
+    this.orderingredients();
   }
   updatepost(id,attributes){
     this.posts = this.posts.filter(p=>{
@@ -131,11 +169,19 @@ export class MenuProvider {
     this.sub_categories = this.sub_categories.filter(scategory=>{
       return scategory.id!=scat.id;
     }); 
+    this.orderscategories();
   }
   deleteitem(item,emailaddress,token){
     item.delete(emailaddress,token).subscribe(data=>{
     });
     this.items = this.items.filter(i=>{
+      return i.id!=item.id;
+    }); 
+  }
+  deletemenu(item,emailaddress,token){
+    item.delete(emailaddress,token).subscribe(data=>{
+    });
+    this.menus = this.menus.filter(i=>{
       return i.id!=item.id;
     }); 
   }

@@ -31,30 +31,36 @@
           </ion-thumbnail>
           <h2>{{it.name}}</h2>
           <p>{{it.full_record.description}}</p>
+          <p>
+          <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+        </p>
           <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
-            Order
+            {{'order'|translation}}
             <ion-icon name="cart"></ion-icon></button>
         </ion-item>
       </ion-list>
   </ion-item>
-  <ion-item  no-padding no-lines>
+  <!--<ion-item  no-padding no-lines>
       <button class="button_cat"  ion-item (click)="toggleSection('other')" detail-none>
         <ion-icon item-right name="arrow-forward" *ngIf="!sections_open['other']"></ion-icon>
         <ion-icon item-right name="arrow-down" *ngIf="sections_open['other']"></ion-icon>
        
       <h2>Other</h2>
       </button>
-      <ion-list *ngIf="sections_open['other']">
+      <ion-list *ngIf="sections_open['other']">-->
         <ion-item *ngFor="let it of items">
           <ion-thumbnail  *ngIf="it.full_record.images && it.full_record.images[0]"  item-start>
             <img *ngIf="it.full_record.images[0]" src="{{it.full_record.images[0]}}">
           </ion-thumbnail>
           <h2>{{it.name}}</h2>
           <p>{{it.full_record.description}}</p>
+          <p>
+          <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+        </p>
           <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
-            Order
+              {{'order'|translation}}
             <ion-icon name="cart"></ion-icon></button>
         </ion-item>
-      </ion-list>
-  </ion-item>
+     <!-- </ion-list>
+  </ion-item>-->
 </ion-content>

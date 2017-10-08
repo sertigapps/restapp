@@ -10,6 +10,8 @@ import { UserProvider } from '../providers/user/user';
 import { CartProvider } from '../providers/cart/cart';
 import { Http , Headers, RequestOptions } from '@angular/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { TranslationPipe } from "../pipes/translation/translation";
+import { ModalController } from 'ionic-angular';
 @Component({
   templateUrl: 'app.html'
 })
@@ -18,14 +20,16 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   loading: Loading;
   pushObject: PushObject;
+  languages = [{id:'en',name:'english'},{id:'es',name:'spanish'}];
   pages: Array<{title: string, component: any}>;
   private url='https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/';
-  rootPage:any ='SplashscreenPage';
+  rootPage:any ;
 
-  constructor(  public cartprovider:CartProvider,public userprovider:UserProvider, public authservice:AuthServiceProvider,public platform: Platform,
-                private nativeStorage:NativeStorage, private keychain: Keychain, splashScreen: SplashScreen,public push: Push, 
+  constructor(  public translate : TranslationPipe,public cartprovider:CartProvider,public userprovider:UserProvider, public authservice:AuthServiceProvider,public platform: Platform,
+                private nativeStorage:NativeStorage, private keychain: Keychain,public splashScreen: SplashScreen,public push: Push, public modalCtrl: ModalController,
                 private alertCtrl: AlertController,public http: Http, private loadingCtrl: LoadingController) {
     platform.ready().then(() => {
+        this.splashScreen.hide();
       if(platform.is('ios')){
         this.keychain.get('sertig_token')
         .then(value=>{
@@ -63,23 +67,28 @@ export class MyApp {
       { title: 'Home', component: HomePage }
     ];
   }
+  showmodalprofile(){
+  let modal = this.modalCtrl.create('ModalUserPage',{'user': this.userprovider.user });
+  modal.present();
+  }
+  
   fetchUserLoged(id,token){
-      let loading = this.loadingCtrl.create({content : "Loading .."});
+      let loading = this.loadingCtrl.create({content : this.translate.transform('loading')+".."});
       this.http.get(this.url+'person/id/'+id).map(res => res.json()).subscribe(res=>{
         loading.dismissAll();
         if(res.errorMessage){
           this.showPopup(res.errorMessage,'');
           if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify(false)).
-          then(()=>this.showPopup('Deleted Id and Token',''))
-          .catch(err=> this.showPopup('Error deleting item IOS',err));
+          then(()=>console.log('Deleted Id and Token',''))
+          .catch(err=> console.log('Error deleting item IOS',err));
               this.nav.setRoot ( 'LoginPage');
           }
           else{
             this.nativeStorage.setItem('sertig_token',false)
             .then(
-              ()=>this.showPopup('Deleted Id and Token',''),
-              error => this.showPopup('Error deleting item Other', error)
+              ()=>console.log('Deleted Id and Token',''),
+              error => console.log('Error deleting item Other', error)
             );
                 this.nav.setRoot ( 'LoginPage');
           }
@@ -94,15 +103,15 @@ export class MyApp {
               if(!res || res.status_code ===0){
                   if(this.platform.is('ios')){
                     this.keychain.set('sertig_token',JSON.stringify(false)).
-                    then(()=>this.showPopup('Deleted Id and Token',''))
-                    .catch(err=> this.showPopup('Error deleting item IOS',err));
+                    then(()=>console.log('Deleted Id and Token',''))
+                    .catch(err=> console.log('Error deleting item IOS',err));
                         this.nav.setRoot ( 'LoginPage');
                     }
                     else{
                       this.nativeStorage.setItem('sertig_token',false)
                       .then(
-                        ()=>this.showPopup('Deleted Id and Token',''),
-                        error => this.showPopup('Error deleting item Other', error)
+                        ()=>console.log('Deleted Id and Token',''),
+                        error => console.log('Error deleting item Other', error)
                       );
                           this.nav.setRoot ( 'LoginPage');
                     }
@@ -221,26 +230,27 @@ export class MyApp {
     this.pushObject = this.push.init(options);
   
     this.pushObject.on('notification').subscribe((notification: any) => {
-      if(notification.message =="New Order Received"){      
+      if(notification.additionalData.note_type =="New Order Received"){      
           setTimeout(()=> {
           let alert = this.alertCtrl.create({
-            title: "New Order Received",
+            title: this.translate.transform("new_order_received"),
             buttons: [
               {
                 text: 'OK',
                 handler: data => {
+                  let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."});
                   this.cartprovider.fetch_more_orders().subscribe(data=>{
                     data.forEach(c=>{
-                      if(!this.cartprovider.orders_indexed[c.id]){
                         this.cartprovider.orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
-                      }
                     });
                     this.cartprovider.new_orders = this.cartprovider.orders.filter((o)=>{return o.full_record.status_code == 1 }).length;
+                    this.cartprovider.orders.sort((a,b)=>{
+                      return a.create_date - b.create_date;
+                    });
+                    loading.dismissAll();
+                    this.nav.push("OrderViewPage");
                   });
-                  this.cartprovider.orders.sort((a,b)=>{
-                    return a.create_date - b.create_date;
-                  });
-                  this.nav.push("OrderViewPage");
+                  
                 }
               }
             ]
@@ -248,9 +258,9 @@ export class MyApp {
           alert.present();
         }, 500);
       }
-      if(notification.message =="Order Updated"){    
+      if(notification.additionalData.note_type =="Order Updated"){    
         let alert = this.alertCtrl.create({
-          title: "Order Updated",
+          title: this.translate.transform("order_updated"),
           buttons: [
             {
               text: 'OK',
@@ -259,10 +269,11 @@ export class MyApp {
                 this.cartprovider.myorders.forEach(element => {
                   if(element.id==notification.additionalData.order_id){
                     found= true;
-                    element.full_record.stage =  element.full_record.stage +1;
+                    element.full_record.stage =  notification.additionalData.new_status;
                     if(element.full_record.stage==4){
                       element.full_record.status_code = 2;
                     }
+                    element.full_record.estimated_time = notification.additionalData.estimated_time;
                   }
                 });
                 if(!found ){
@@ -278,9 +289,9 @@ export class MyApp {
         });
         alert.present();
     }
-    if(notification.message =="New User"){    
+    if(notification.additionalData.note_type  =="New User"){    
       let alert = this.alertCtrl.create({
-        title: "New User",
+        title:this.translate.transform("new_user"),
         buttons: [
           {
             text: 'OK',
@@ -308,24 +319,24 @@ export class MyApp {
   }
   logout() {
     this.showPopup(this.userprovider.emailaddress,this.userprovider.token);
-      let loading = this.loadingCtrl.create({content : "Login out .."});
+      let loading = this.loadingCtrl.create({content : this.translate.transform("login_out")+ ".."});
     this.authservice.logout(this.userprovider.emailaddress,this.userprovider.token).subscribe(res => {
       loading.dismissAll();
       if(!res.errorMessage){
         if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify(false)).
-          then(()=>this.showPopup('Deleted Id and Token',''))
-          .catch(err=> this.showPopup('Error deleting item IOS',err));
+          then(()=>console.log('Deleted Id and Token',''))
+          .catch(err=> console.log('Error deleting item IOS',err));
         }
         else{
           this.nativeStorage.setItem('sertig_token',false)
           .then(
-            ()=>this.showPopup('Deleted Id and Token',''),
-            error => this.showPopup('Error deleting item Other', error)
+            ()=>console.log('Deleted Id and Token',''),
+            error => console.log('Error deleting item Other', error)
           );  
         }
         this.pushObject.unregister().then(()=>{
-          this.showPopup('Unsubscribed from push','');
+          console.log('Unsubscribed from push','');
         });
         this.nav.setRoot ( 'LoginPage');
       }

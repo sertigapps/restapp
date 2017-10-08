@@ -31,7 +31,8 @@ export class AuthServiceProvider {
       let data_n = {
         "to": "/topics/newuser",
         "data": {
-          "message": "New User"
+          "message": "Nuevo Usuario",
+          "note_type": "New User"
          }
       };
       this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data_n), options_n).map(res => res.json()).subscribe((a)=>{
@@ -43,6 +44,17 @@ export class AuthServiceProvider {
       let options = new RequestOptions({ headers: headers });
       let data = credentials;
     return this.http.post(this.url+'register', JSON.stringify(data), options)
+    .map(res => res.json());
+    }
+  }
+
+  public recover(credentials) {
+    if (credentials.emailaddress === null ) {
+      return Observable.throw("Please insert credentials");
+    } else {
+      credentials['app'] = 'La Barra App';
+      let data = credentials;
+    return this.http.post('http://ec2-54-237-201-190.compute-1.amazonaws.com/upload/recover_request.php', JSON.stringify(data))
     .map(res => res.json());
     }
   }

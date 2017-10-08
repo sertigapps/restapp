@@ -4,7 +4,7 @@
         <ion-icon name='menu'></ion-icon>
       </button>
       <ion-title>
-        New Users
+        {{'new_users'|translation}}
       </ion-title>
     </ion-navbar>
   </ion-header>
@@ -16,8 +16,11 @@
       {{c.name}} {{c.lastname}}
     </ion-card-header>
     <ion-card-content>
-      Email : {{c.emailaddress}}
-        <button (click)="approve(c)" ion-button class="submit-btn" full >Approve</button>
+      
+        {{'email'|translation}} : {{c.emailaddress}}<br>
+        {{'phonenumber'|translation}} : {{c.full_record.phonenumber}}
+        <button (click)="approve(c)" ion-button class="submit-btn" full >
+            {{'approve'|translation}}</button>
       </ion-card-content>
       
   </ion-card>

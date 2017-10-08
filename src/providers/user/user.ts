@@ -15,6 +15,7 @@ export class UserProvider {
   public user:User;
   public newusers: Array<User> = [];
   public token:String;
+  public language:any;
   public emailaddress:String;
   constructor(public http: Http) {
     console.log('Hello UserProvider Provider');
@@ -23,19 +24,38 @@ export class UserProvider {
   public logged_in(name,lastname,token,emailaddress,full){
     this.token = token;
     this.emailaddress = emailaddress
-    this.user = new User(name,lastname,token,emailaddress,full);
+    this.language = 'es';
+    if(full.language){
+      this.language = full.language;
+    }
+    full.password = '';
+    this.user = new User(name,lastname,token,emailaddress,full,this.http);
   }
   load_new_users(){
     this.newusers = [];
     this.http.get(this.url+'query/person/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
       data.forEach(c=>{
-        this.newusers.push(new User(c.name,c.lastname,'',c.emailaddress,c));
+        this.newusers.push(new User(c.name,c.lastname,'',c.emailaddress,c,this.http));
       })
     });
   }
+  get_store_settings(){
+    this.newusers = [];
+    return this.http.get(this.url+'/atomic_id/table/store_availability')
+    .map(res => res.json())
+  }
+  switch_order_availability(value){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+    headers.append('sertig_token',this.token.toString());
+    headers.append('sertig_email',this.emailaddress.toString());
+  return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/atomic_id/table/store_availability', JSON.stringify({orders_available:value}), options)
+  .map(res => res.json());
+  }
+
   approve_user(user){
-    debugger;
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });

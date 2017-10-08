@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Admin</ion-title>
+    <ion-title>{{'admin' | translation}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -18,32 +18,32 @@
     <ion-list>
       <ion-item (click)="goto('AdminCategoriesPage')">
         <ion-icon name="list-box" item-start></ion-icon>
-          Categories
+        {{'categories' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
       <ion-item (click)="goto('AdminSubcategoriesPage')">
         <ion-icon name="menu" item-start></ion-icon>
-          Sub Categories
+        {{'sub_categories' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
       <ion-item  (click)="goto('AdminMenusPage')">
         <ion-icon name="list" item-start></ion-icon>
-          Menus
+        {{'menus' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
       <ion-item  (click)="goto('AdminItemsPage')">
         <ion-icon name="pizza" item-start></ion-icon>
-          Items
+        {{'items' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
       <ion-item  (click)="goto('AdminIngredientsPage')">
         <ion-icon name="clipboard" item-start></ion-icon>
-          Ingredients
+        {{'ingredients' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
       <ion-item  (click)="goto('AdminPostsPage')">
         <ion-icon name="paper" item-start></ion-icon>
-          Posts
+        {{'posts' | translation}}
         <ion-icon name="settings" item-end></ion-icon>
       </ion-item>
     </ion-list>

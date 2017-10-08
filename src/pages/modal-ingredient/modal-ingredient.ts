@@ -8,6 +8,7 @@ import { Camera } from '@ionic-native/camera';
 import { UserProvider } from '../../providers/user/user';
 import { Http} from '@angular/http';
 import { MenuProvider } from '../../providers/menu/menu';
+import { TranslationPipe } from "../../pipes/translation/translation";
 declare var cordova: any;
 
 @IonicPage()
@@ -18,29 +19,29 @@ declare var cordova: any;
 export class ModalIngredientPage {
   public id : number;
   public title : string;
-  public image_base : string = "https://s3.amazonaws.com/sertigs3/";
+  public image_base : string = "https://s3.amazonaws.com/sertigs3/labarraapp/";
   loading: Loading;
   lastImage: string = null;
   image_uploaded: string = null;
   public title_button : string;
   public ingredient :  Ingredient;
-  constructor(  public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,private transfer: Transfer,
+  constructor(public translate : TranslationPipe,  public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,private transfer: Transfer,
     public params: NavParams, public actionSheetCtrl: ActionSheetController,  private filePath: FilePath,
     public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController, private file: File,
     public viewCtrl: ViewController) {
     this.id = this.params.get('id');
     if(this.id===0){
       this.ingredient = new Ingredient(0,'',{"id":0, "name":''},this.http);
-      this.title = "Create new Ingredient";
-      this.title_button = "Create";
+      this.title = "create_new_ing";
+      this.title_button = "create";
     }
     else{
       this.ingredient = this.params.get('ing');
       if(this.ingredient.full_record.image_url){
         this.image_uploaded = this.ingredient.full_record.image_url;
       }
-      this.title_button = "Save";
-      this.title = "Update Ingredient";
+      this.title_button = "save";
+      this.title = "update_ingredient";
     }
   }
 
@@ -52,7 +53,7 @@ export class ModalIngredientPage {
   }
   submit(){
      this.loading = this.loadingCtrl.create({
-    content: 'Saving Ingredient',
+    content: this.translate.transform('saving')+' '+this.translate.transform('ingredient'),
   });
   this.loading.present();
     this.ingredient.save(this.userprovider.emailaddress,this.userprovider.token).subscribe(res => {
@@ -60,6 +61,7 @@ export class ModalIngredientPage {
       if (!res.errorMessage) {
         if(this.id===0){
           this.menuprovider.ingredients.push( new Ingredient(res.id,res.name,res,this.http));
+          this.menuprovider.orderingredients();
         }
         else{
           if(res.Attributes){
@@ -73,27 +75,27 @@ export class ModalIngredientPage {
     },
       error => {
         this.loading.dismissAll();
-        this.presentToast("Error on Request");
+        this.presentToast(this.translate.transform('error_on_req'));
       });
   }
   public presentActionSheet() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Select Image Source',
+      title: this.translate.transform('select_image_source'),
       buttons: [
         {
-          text: 'Load from Library',
+          text: this.translate.transform('load_from_library'),
           handler: () => {
             this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
           }
         },
         {
-          text: 'Use Camera',
+          text:this.translate.transform('use_camera'),
           handler: () => {
             this.takePicture(this.camera.PictureSourceType.CAMERA);
           }
         },
         {
-          text: 'Cancel',
+          text:this.translate.transform('cancel'),
           role: 'cancel'
         }
       ]
@@ -141,7 +143,7 @@ private copyFileToLocalDir(namePath, currentName, newFileName) {
     this.lastImage = newFileName;
     this.uploadImage();
   }, error => {
-    this.presentToast('Error while storing file.');
+    this.presentToast(this.translate.transform('error_storing_file'));
   });
 }
  
@@ -183,14 +185,15 @@ public uploadImage() {
     params : {
       'fileName': this.userprovider.emailaddress.replace('@','_-_')+ filename,
       'sertig_email': this.userprovider.emailaddress,
-      'sertig_token': this.userprovider.token
+      'sertig_token': this.userprovider.token,
+      'sertig_app': "labarraapp"
   }
   };
  
   const fileTransfer: TransferObject = this.transfer.create();
  
   this.loading = this.loadingCtrl.create({
-    content: 'Uploading...',
+    content: this.translate.transform('uploading')+' ....',
   });
   this.loading.present();
  
@@ -205,7 +208,7 @@ public uploadImage() {
     this.ingredient.full_record.image_url = this.image_uploaded;
   }, err => {
     this.loading.dismissAll()
-    this.presentToast('Error while uploading file.');
+    this.presentToast(this.translate.transform('error_uploading'));
   });
 }
 

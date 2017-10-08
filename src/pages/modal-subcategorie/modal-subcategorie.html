@@ -1,17 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-     {{title}}
+     {{title|translation}}
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
-        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <span ion-text color="primary" showWhen="ios">{{'cancel'|translation}}</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
       <button showWhen="browser"  (click)="dismiss()">
-        <span ion-text color="primary" >Cancel</span>
+        <span ion-text color="primary" >{{'cancel'|translation}}</span>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -23,24 +23,27 @@
         <ion-col>
           <ion-list inset>
             <ion-item>
-              <ion-input type="text" placeholder="Name" name="name" [(ngModel)]="scategory.full_record.name" required></ion-input>
+              <ion-input type="text" placeholder="{{'name'|translation}}" name="name" [(ngModel)]="scategory.full_record.name" required></ion-input>
             </ion-item>
           <ion-item>
-            <ion-label>Category</ion-label>
+            <ion-label>{{'category'|translation}}</ion-label>
             <ion-select required name="category_id" [(ngModel)]="scategory.full_record.category_id" >
               <ion-option value="{{c.id}}"  *ngFor="let c of menuprovider.categories" selected="{{scategory.full_record.category_id==c.id}}">{{c.name}}</ion-option>
 
             </ion-select>
           </ion-item>
+          <ion-item>
+            <ion-input type="number" placeholder="{{'order_1'|translation}}" name="order" [(ngModel)]="scategory.full_record.order" ></ion-input>
+          </ion-item>
             <ion-item>
-              <ion-textarea rows ="3" type="textarea" placeholder="Description" name="description" [(ngModel)]="scategory.full_record.description" ></ion-textarea>
+              <ion-textarea rows ="3" type="textarea" placeholder="{{'description'|translation}}" name="description" [(ngModel)]="scategory.full_record.description" ></ion-textarea>
             </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col class="signup-col">
-          <button ion-button class="submit-btn" full type="submit" [disabled]="!scategoryform.form.valid">{{title_button}}</button>
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!scategoryform.form.valid">{{title_button|translation}}</button>
         </ion-col>
       </ion-row>
       <ion-card>
@@ -52,7 +55,7 @@
     <ion-item>
           
           <button (click)="presentActionSheet()" ion-button full color="secondary" item-end icon-only>
-            <ion-icon clear  name="add-circle"></ion-icon>Image
+            <ion-icon clear  name="add-circle"></ion-icon>{{'image'|translation}}
           </button>
         </ion-item>
 </ion-content>

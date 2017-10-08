@@ -16,7 +16,15 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { UserProvider } from '../providers/user/user';
 import { MenuProvider } from '../providers/menu/menu';
 import { Push } from '@ionic-native/push';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { AppAvailability } from '@ionic-native/app-availability';
+import { Device } from '@ionic-native/device';
 import { CartProvider } from '../providers/cart/cart';
+import { CallNumber } from '@ionic-native/call-number';
+import { PipesModule } from "../pipes/pipes.module";
+import { TranslationPipe } from "../pipes/translation/translation";
+import { LaunchNavigator } from '@ionic-native/launch-navigator';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +33,7 @@ import { CartProvider } from '../providers/cart/cart';
   imports: [
     BrowserModule,
     HttpModule,
+    PipesModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -32,6 +41,12 @@ import { CartProvider } from '../providers/cart/cart';
     MyApp
   ],
   providers: [
+    LaunchNavigator, 
+    TranslationPipe,
+    CallNumber,
+    InAppBrowser,
+    AppAvailability,
+    Device,
     StatusBar,
     File,
     Transfer,

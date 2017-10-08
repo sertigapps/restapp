@@ -13,6 +13,9 @@ export class Category {
     this.name = name;
     this.id = id;
     this.http=http;
+    if(!full_record.order){
+      full_record.order = 999;
+    }
     this.full_record = full_record;
     this.base_record = JSON.parse(JSON.stringify(full_record));
   }
@@ -24,6 +27,11 @@ export class Category {
       let options = new RequestOptions({ headers: headers });
       headers.append('sertig_token',token.toString());
       headers.append('sertig_email',emailaddress.toString());
+      Object.keys(this.full_record).forEach(attr=>{
+        if( this.full_record[attr]==[] || this.full_record[attr] =="" || this.full_record[attr]==[""] ){
+          delete this.full_record[attr];
+        }
+      });
       let data = {item:this.full_record};
     return this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/category', JSON.stringify(data), options)
     .map(res => res.json());
@@ -32,7 +40,7 @@ export class Category {
       var attr_to_change = {};
       var counter = 0;
       Object.keys(this.full_record).forEach(attr=>{
-        if(this.full_record[attr]!==this.base_record[attr]){
+        if(this.full_record[attr]!==this.base_record[attr] && (this.full_record[attr]!=[] && this.full_record[attr] !="" && this.full_record[attr]!=[""] )){
           attr_to_change[attr]=this.full_record[attr];
           counter++;
         }

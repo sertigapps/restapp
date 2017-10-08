@@ -4,7 +4,7 @@
       <ion-icon name='menu'></ion-icon>
     </button>
     <ion-title>
-      Our Menu
+      {{'our_menu'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
         <button (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
@@ -34,15 +34,15 @@
     <ion-row>
       <ion-col (click)="navCtrl.setRoot('HomePage')" class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='paper'></ion-icon>
-        News
+        {{'news'|translation}}
       </ion-col>
       <ion-col   class=" selected_tab navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='menu'></ion-icon>
-        Menu
+        {{'menu'|translation}}
       </ion-col>
       <ion-col (click)="navCtrl.setRoot('MyOrdersPage')"  class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='pizza'></ion-icon>
-        My Orders
+        {{'my_orders'|translation}}
         <ion-badge *ngIf="cartprovider.my_new_orders">
             {{cartprovider.my_new_orders}}
         </ion-badge>

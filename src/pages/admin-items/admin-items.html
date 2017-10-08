@@ -1,30 +1,54 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Admin your Items</ion-title>
+    <ion-title>{{'admin_items'|translation }}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <ion-item>
+      <ion-label>{{'filter_cat'|translation}}</ion-label>
+      <ion-select  (ngModelChange)="update_options($event)" multiple="true" [(ngModel)]="search_cats" name="search_cat"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+          <ion-option *ngFor="let c of menuprovider.categories; let i = index;trackBy: customTrackBy" value="{{c.id}}" >{{c.name}}</ion-option>
+        </ion-select>
+  </ion-item>
+  <ion-item>
+      <ion-label>{{'filter_scat'|translation}}</ion-label>
+      <ion-select   [(ngModel)]="selected_scats" name="search_scat" multiple="true"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+          <ion-option *ngFor="let c of search_scats; let i = index;trackBy: customTrackBy" value="{{c.id}}" >{{c.name}}</ion-option>
+        </ion-select>
+  </ion-item>
   <ion-list>
-     <ion-item-sliding *ngFor="let c of menuprovider.items"  >
+     <ion-item-sliding [hidden]="(search_cats.length>0 && search_cats.indexOf(c.full_record.category_id+'')<0) || (selected_scats.length>0 && selected_scats.indexOf(c.full_record.subcategory_id+'')<0)" *ngFor="let c of menuprovider.items ;trackBy: customTrackBy"  >
       <ion-item>
         <ion-avatar *ngIf="c.full_record.images && c.full_record.images[0]" item-start>
           <img *ngIf="c.full_record.images[0]" src="{{c.full_record.images[0]}}">
         </ion-avatar>
         <h2>{{c.name}}</h2>
+        <ion-badge color="azul" item-end *ngIf="c.full_record.order_count">
+            {{c.full_record.order_count}}
+        </ion-badge>
       </ion-item>
       <ion-item-options>
-        
-        <button ion-button color="primary" icon-start (click)="edititem(c)">
+          <button ion-button *ngIf="!loading_avails && c.full_record.availability == 1" color="warning" icon-start (click)="switch_availability(c)">
+              <ion-icon name="close-circle"></ion-icon>
+              {{'disable'|translation}}
+            </button>
+            <button ion-button *ngIf="!loading_avails && c.full_record.availability != 1" color="secondary" icon-start (click)="switch_availability(c)">
+                <ion-icon name="checkmark"></ion-icon>
+                {{'enable'|translation}}
+              </button>
+            
+
+        <button ion-button color="azul" icon-start (click)="edititem(c)">
           <ion-icon name="build"></ion-icon>
-          Edit
+          {{'edit'|translation}}
         </button>
         <button ion-button color="danger" icon-start (click)="deleteitem(c)">
           <ion-icon name="trash"></ion-icon>
-          Delete
+          {{'delete'|translation}}
         </button>
       </ion-item-options>
     </ion-item-sliding>

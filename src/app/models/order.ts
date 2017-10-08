@@ -24,7 +24,7 @@ export class Order {
     this.create_label = (new Date(create_date)).toLocaleString();
     this.full_record = full_record;
   }
-  advance(emailaddress,token){
+  advance(emailaddress,token,estimated_time){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     let options = new RequestOptions({ headers: headers });
@@ -35,10 +35,30 @@ export class Order {
     if(new_stage==4){
       put_data['status_code']=2;
     }
+    if(estimated_time!=''){
+      put_data['estimated_time'] = estimated_time;
+    }
   return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order/id/'+this.id, JSON.stringify(put_data), options)
   .map(res => res.json());
   }
-  notify_update(){
+  fetch_record(){
+    return this.http.get(this.url+'/order/id/'+this.id)
+    .map(res => res.json());
+  }
+  cancel(emailaddress,token){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+    headers.append('sertig_token',token.toString());
+    headers.append('sertig_email',emailaddress.toString());
+    this.full_record.stage =5;
+    this.full_record.status_code =2;
+    let put_data= {"stage":5};
+      put_data['status_code']=2;
+  return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order/id/'+this.id, JSON.stringify(put_data), options)
+  .map(res => res.json());
+  }
+  notify_update(estimated_time){
     this.http.get(this.url+'query/person_token/emailaddress/'+this.emailaddress+'/EQ/status_code/1/EQ')
     .map(res => res.json()).subscribe((data)=>{
       let headers = new Headers();
@@ -50,9 +70,12 @@ export class Order {
         let data_not = {
           "to": element.notification,
           "data": {
-            "message": "Order Updated",
+            "message": "Orden Actualizada",
+            "note_type":"Order Updated",
             "order_id":this.id,
-            "emailaddress": element.emailaddress
+            "emailaddress": element.emailaddress,
+            "new_status":this.full_record.stage+1,
+            "estimated_time":estimated_time
            }
           }
           this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data_not), options).map(res => res.json()).subscribe((data)=>{

@@ -4,7 +4,7 @@
       <ion-icon name='menu'></ion-icon>
     </button>
     <ion-title>
-      News
+      {{'news'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
         <button (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
@@ -40,10 +40,10 @@
           <ion-badge  *ngIf="c.full_record.likes" item-end>{{c.full_record.likes.length}}</ion-badge>
         </button>
       </ion-col>
-      <ion-col text-right>
-        <button ion-button clear small color="danger" icon-start>
+      <ion-col *ngIf="c.full_record.item_id" text-right>
+        <button ion-button clear small color="secondary" icon-start (click)="show_item_to_order(c.full_record.item_id,c.full_record.price_sale,c.full_record.item_label)">
           <ion-icon name='share-alt'></ion-icon>
-          My Order
+          {{'order'|translation}}
         </button>
       </ion-col>
     </ion-row>
@@ -55,15 +55,15 @@
     <ion-row>
       <ion-col class="selected_tab navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='paper'></ion-icon>
-        News
+        {{'news'|translation}}
       </ion-col>
       <ion-col (click)="navCtrl.setRoot('MenuPage')"  class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='menu'></ion-icon>
-        Menu
+        {{'menu'|translation}}
       </ion-col>
       <ion-col (click)="navCtrl.setRoot('MyOrdersPage')"  class=" navtab" text-center col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
         <ion-icon name='pizza'></ion-icon>
-        My Orders
+        {{'my_orders'|translation}}
         <ion-badge *ngIf="cartprovider.my_new_orders">
           {{cartprovider.my_new_orders}}
         </ion-badge>

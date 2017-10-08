@@ -1,0 +1,60 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>
+       {{title | translation}}
+      </ion-title>
+      <ion-buttons start>
+        <button ion-button (click)="dismiss()">
+          <span ion-text color="primary" showWhen="ios">{{'cancel'|translation}}</span>
+          <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons end>
+        <button showWhen="browser"  (click)="dismiss()">
+          <span ion-text color="primary" >{{'cancel'|translation}}</span>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form (ngSubmit)="submit()" #userform="ngForm">
+        <ion-row>
+          <ion-col>
+            <ion-list inset>
+              <ion-item>
+                <ion-input type="url" placeholder="{{'email' | translation}}" name="name" [(ngModel)]="user.full_record.emailaddress" required></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="text" placeholder="{{'name'|translation}}" name="nameuser" [(ngModel)]="user.full_record.name" ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="text" placeholder="{{'lastname'|translation}}" name="lastnameuser" [(ngModel)]="user.full_record.lastname" ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="number" placeholder="{{'phonenumber'|translation}}" name="phoneuser" [(ngModel)]="user.full_record.phonenumber" ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input type="password" placeholder="{{'new_pass'|translation}}" name="password" [(ngModel)]="user.full_record.password" ></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="signup-col">
+            <button ion-button class="submit-btn" full type="submit" [disabled]="!userform.form.valid">{{title_button |translation}}</button>
+          </ion-col>
+        </ion-row>
+        <ion-card>
+          <ion-card-content [hidden]="image_uploaded === null" >
+            <img style="width: 100%"  src="{{image_uploaded}}" />
+          </ion-card-content>
+        </ion-card>
+      </form>
+      <ion-item>
+            
+            <button (click)="presentActionSheet()" ion-button full color="secondary" item-end icon-only>
+              <ion-icon clear  name="add-circle"></ion-icon>{{'image'|translation}}
+            </button>
+          </ion-item>
+  </ion-content>

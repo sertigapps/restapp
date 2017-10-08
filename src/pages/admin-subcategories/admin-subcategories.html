@@ -1,7 +1,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Admin your Sub Categories</ion-title>
+    <ion-title>
+        {{'admin_sub_cats'|translation}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,11 +21,11 @@
         
         <button ion-button color="primary" icon-start (click)="editSubCategory(c)">
           <ion-icon name="build"></ion-icon>
-          Edit
+          {{'edit'|translation}}
         </button>
         <button ion-button color="danger" icon-start (click)="deletesubCategory(c)">
           <ion-icon name="trash"></ion-icon>
-          Delete
+          {{'delete'|translation}}
         </button>
       </ion-item-options>
     </ion-item-sliding>

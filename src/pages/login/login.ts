@@ -8,6 +8,7 @@ import { CartProvider } from '../../providers/cart/cart';
 import { Order } from '../../app/models/order';
 import { Http , Headers, RequestOptions } from '@angular/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { TranslationPipe } from "../../pipes/translation/translation";
  
 @IonicPage()
 @Component({
@@ -20,7 +21,7 @@ export class LoginPage {
    pushObject: PushObject;
   registerCredentials = {emailaddress:'',password:''}
  
-  constructor(  public cartprovider:CartProvider,public userprovider:UserProvider,private platform: Platform,
+  constructor(  public translate : TranslationPipe,public cartprovider:CartProvider,public userprovider:UserProvider,private platform: Platform,
                 private nativeStorage:NativeStorage, private keychain: Keychain,public menu: MenuController,public push: Push, 
                 private nav: NavController,public http: Http, private auth: AuthServiceProvider, 
                 private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
@@ -30,9 +31,12 @@ export class LoginPage {
   public createAccount() {
     this.nav.push('RegisterPage');
   }
+  public recoverAccount() {
+    this.nav.push('RecoverPasswordPage');
+  }
  
   public login() {
-    let loading = this.loadingCtrl.create({content : "Login in, please wait ....."});
+    let loading = this.loadingCtrl.create({content : this.translate.transform('login_message')});
     loading.present();
     this.auth.login(this.registerCredentials).subscribe(res => {
       loading.dismissAll();
@@ -40,14 +44,14 @@ export class LoginPage {
         this.userprovider.logged_in(res.name,res.lastname,res.token,res.emailaddress,res);
         if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify({id:res.id,token:res.token})).
-          then(()=>this.showPopup('Stored Id and Token',''))
-          .catch(err=> this.showPopup('Error storing item IOS',err));
+          then(()=>console.log('Stored Id and Token',''))
+          .catch(err=> console.log('Error storing item IOS',err));
         }
         else{
           this.nativeStorage.setItem('sertig_token',{id:res.id,token:res.token})
           .then(
-            ()=>this.showPopup('Stored Id and Token',''),
-            error => this.showPopup('Error storing item Other', error)
+            ()=>console.log('Stored Id and Token',''),
+            error => console.log('Error storing item Other', error)
           );
         }
          this.pushsetup((registration_id,err)=>{
@@ -57,11 +61,11 @@ export class LoginPage {
               if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
                 this.pushObject.subscribe('neworder').then((data)=>{
                   if(data!="OK"){
-                    this.showPopup('Error subscribing to new orders','');
+                    console.log('Error subscribing to new orders','');
                   }
                   this.pushObject.subscribe('newuser').then((data)=>{
                     if(data!="OK"){
-                      this.showPopup('Error subscribing to new orders','');
+                      console.log('Error subscribing to new orders','');
                     }
                   });
                 });
@@ -80,11 +84,11 @@ export class LoginPage {
                 
                 this.pushObject.unsubscribe('neworder').then((data)=>{
                   if(data!="OK"){
-                    this.showPopup('Error subscribing to new orders','');
+                   console.log('Error subscribing to new orders','');
                   }
                   this.pushObject.unsubscribe('newuser').then((data)=>{
                     if(data!="OK"){
-                      this.showPopup('Error subscribing to new orders','');
+                      console.log('Error subscribing to new orders','');
                     }
                   });
                 });
@@ -102,7 +106,7 @@ export class LoginPage {
               }
             }
             else{
-              this.showPopup('Error Registering for notifications', err);
+              console.log('Error Registering for notifications', err);
             }
             
           });
@@ -112,7 +116,7 @@ export class LoginPage {
           this.cartprovider.fetch_my_orders(this.userprovider.user.emailaddress);
           this.nav.setRoot('HomePage');
       } else {
-        this.showPopup("Access Denied",res.errorMessage);
+        this.showPopup(this.translate.transform("access_denied"),this.translate.transform(res.errorMessage));
       }
     },
       error => {
@@ -164,26 +168,27 @@ export class LoginPage {
     this.pushObject = this.push.init(options);
   
     this.pushObject.on('notification').subscribe((notification: any) => {
-      if(notification.message =="New Order Received"){      
+      if(notification.additionalData.note_type =="New Order Received"){      
         setTimeout(()=> {
         let alert = this.alertCtrl.create({
-          title: "New Order Received",
+          title: this.translate.transform("new_order_received"),
           buttons: [
             {
               text: 'OK',
               handler: data => {
+                let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."})
                 this.cartprovider.fetch_more_orders().subscribe(data=>{
                   data.forEach(c=>{
-                    if(!this.cartprovider.orders_indexed[c.id]){
                       this.cartprovider.orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
-                    }
                   });
                   this.cartprovider.new_orders = this.cartprovider.orders.filter((o)=>{return o.full_record.status_code == 1 }).length;
+                  this.cartprovider.orders.sort((a,b)=>{
+                    return a.create_date - b.create_date;
+                  });
+                  loading.dismissAll();
+                  this.nav.push("OrderViewPage");
                 });
-                this.cartprovider.orders.sort((a,b)=>{
-                  return a.create_date - b.create_date;
-                });
-                this.nav.push("OrderViewPage");
+               
               }
             }
           ]
@@ -191,9 +196,9 @@ export class LoginPage {
         alert.present();
       }, 500);
     }
-    if(notification.message =="Order Updated"){    
+    if(notification.additionalData.note_type =="Order Updated"){    
       let alert = this.alertCtrl.create({
-        title: "Order Updated",
+        title: this.translate.transform("order_updated"),
         buttons: [
           {
             text: 'OK',
@@ -202,10 +207,11 @@ export class LoginPage {
               this.cartprovider.myorders.forEach(element => {
                 if(element.id==notification.additionalData.order_id){
                   found= true;
-                  element.full_record.stage =  element.full_record.stage +1;
+                  element.full_record.stage = notification.additionalData.new_status;
                   if(element.full_record.stage==4){
                     element.full_record.status_code = 2;
                   }
+                  element.full_record.estimated_time = notification.additionalData.estimated_time;
                 }
               });
               if(!found ){
@@ -221,9 +227,9 @@ export class LoginPage {
       });
       alert.present();
   }
-  if(notification.message =="New User"){    
+  if(notification.additionalData.note_type  =="New User"){    
     let alert = this.alertCtrl.create({
-      title: "New User",
+      title:this.translate.transform("new_user"),
       buttons: [
         {
           text: 'OK',

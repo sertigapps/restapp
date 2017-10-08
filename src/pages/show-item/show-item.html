@@ -32,18 +32,19 @@
                 <ion-icon item-right name="arrow-forward" *ngIf="!sections_open['description']"></ion-icon>
                 <ion-icon item-right name="arrow-down" *ngIf="sections_open['description']"></ion-icon>
                 <h2>
-                  Description</h2>
+                  {{'description'|translation}}</h2>
               </button>
         </ion-card-header>
         <ion-card-content *ngIf="sections_open['description']" >
             <h3>{{item.full_record.description}}</h3>
         </ion-card-content>
       </ion-card>
-      <ion-card [hidden]="(item.full_record.menu_flag && item.full_record.menu_flag ==1 ) ||  item.full_record.price_label.length <2">
+      <ion-card [hidden]="(item.full_record.menu_flag && item.full_record.menu_flag ==1 ) ||  item.full_record.price_label.length <2 || disabled_types">
           <ion-card-content >
-              <ion-item>
-                  <ion-label>Type</ion-label>
-                  <ion-select required class="myCustomSelect" (ngModelChange)="calculate_price($event)" [(ngModel)]="type_selected" name="type_selected"  cancelText="Cancel" okText="Done!">
+              <ion-item >
+                  <ion-label *ngIf="!item.full_record.label_type" >{{'included'|translation}}</ion-label>
+                  <ion-label *ngIf="item.full_record.label_type" >{{item.full_record.label_type}}</ion-label>
+                  <ion-select  required class="myCustomSelect" (ngModelChange)="calculate_price($event)" [(ngModel)]="type_selected" name="type_selected"  cancelText="Cancel" okText="Done!">
                     <ion-option *ngFor="let c of item.full_record.price_label" value="{{c}}" >{{c}}</ion-option> 
                   </ion-select>
               </ion-item>
@@ -56,19 +57,19 @@
                 <ion-icon item-right name="arrow-forward" *ngIf="!sections_open['ingredients']"></ion-icon>
                 <ion-icon item-right name="arrow-down" *ngIf="sections_open['ingredients']"></ion-icon>
                 <h2>
-                  Ingredients</h2>
+                    {{'ingredients'|translation}}</h2>
               </button>
         </ion-card-header>
         <ion-card-content *ngIf="sections_open['ingredients']" >
           <ion-item>
-              <ion-label>Included</ion-label>
-              <ion-select [(ngModel)]="ingredients_selected" name="ingredients" multiple="true" cancelText="Cancel" okText="Done!">
+              <ion-label>{{'included'|translation}}</ion-label>
+              <ion-select [(ngModel)]="ingredients_selected" name="ingredients" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option *ngFor="let c of ingredients" value="{{c}}" >{{c.split(',')[1]}}</ion-option> 
               </ion-select>
           </ion-item>
           <ion-item>
-              <ion-label>Extra</ion-label>
-              <ion-select [(ngModel)]="extras_added" name="extras_added" multiple="true" cancelText="Cancel" okText="Done!">
+              <ion-label>{{'extra'|translation}}</ion-label>
+              <ion-select (ngModelChange)="calculate_price_ingredients($event)" [(ngModel)]="extras_added" name="extras_added" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option *ngFor="let c of extras" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
                 
               </ion-select>
@@ -82,7 +83,7 @@
         <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
           <ion-card-header>
             <button type="button" (click)="toggleSection('ingredients'+x.split(',')[0])"  ion-item  detail-none>
-                  <ion-icon item-right name="swap" *ngIf="!sections_open['ingredients'+x.split(',')[0]]"></ion-icon>
+                  <ion-icon item-right name="switch" *ngIf="!sections_open['ingredients'+x.split(',')[0]]"></ion-icon>
                   <ion-icon item-right name="arrow-up" *ngIf="sections_open['ingredients'+x.split(',')[0]]"></ion-icon>
                   <h2>
                      {{x.split(',')[1]}}</h2>
@@ -92,21 +93,22 @@
 
         <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
           <ion-card-content *ngIf="sections_open['ingredients'+x.split(',')[0]]" >
-              <ion-item *ngIf="item_type[x.split(',')[0]].length>1">
-                  <ion-label>Included</ion-label>
-                  <ion-select class="myCustomSelect" (ngModelChange)="calculate_price_menu($event,x,i)" [(ngModel)]="item_type_selected[x.split(',')[0]]" name="ingredients_included_{{x.split(',')[0]}}"  cancelText="Cancel" okText="Done!">
+              <ion-item [hidden]="disabled_types" *ngIf="item_type[x.split(',')[0]].length>1">
+                  <ion-label *ngIf="!item.full_record.label_type" >{{'included'|translation}}</ion-label>
+                  <ion-label *ngIf="item.full_record.label_type" >{{item.full_record.label_type}}</ion-label>
+                  <ion-select class="myCustomSelect" (ngModelChange)="calculate_price_menu($event,x,i)" [(ngModel)]="item_type_selected[x.split(',')[0]]" name="ingredients_included_{{x.split(',')[0]}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                     <ion-option *ngFor="let c of item_type[x.split(',')[0]]" value="{{c}}" >{{c}}</ion-option> 
                   </ion-select>
               </ion-item>
             <ion-item>
-                <ion-label>Ing. Included</ion-label>
-                <ion-select class="myCustomSelect" [(ngModel)]="ingredients_item_selected[x.split(',')[0]]" name="ingredients{{x.split(',')[0]}}" multiple="true" cancelText="Cancel" okText="Done!">
+                <ion-label>{{'ing_included'|translation}}</ion-label>
+                <ion-select class="myCustomSelect" [(ngModel)]="ingredients_item_selected[x.split(',')[0]]" name="ingredients{{x.split(',')[0]}}" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                   <ion-option *ngFor="let c of ingredients_item[x.split(',')[0]]" value="{{c}}" >{{c.split(',')[1]}}</ion-option> 
                 </ion-select>
             </ion-item>
             <ion-item>
-                <ion-label>Extra</ion-label>
-                <ion-select class="myCustomSelect" [(ngModel)]="extras_item_added[x.split(',')[0]]" name="extras_added{{x.split(',')[0]}}" multiple="true" cancelText="Cancel" okText="Done!">
+                <ion-label>{{'extra'|translation}}</ion-label>
+                <ion-select (ngModelChange)="calculate_price_ingredients($event,x.split(',')[0])" class="myCustomSelect" [(ngModel)]="extras_item_added[x.split(',')[0]]" name="extras_added{{x.split(',')[0]}}" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                   <ion-option *ngFor="let c of extras_item[x.split(',')[0]]" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
                   
                 </ion-select>
@@ -119,14 +121,24 @@
       </ion-card>
       <ion-card >
         <ion-row>
+            
+            <ion-item>
+                <ion-textarea rows ="3" type="textarea" placeholder="{{'comment'|translation}}" name="comment" [(ngModel)]="comment_order" ></ion-textarea>
+              </ion-item>
+            <ion-item>
+                <ion-label>{{'qty'|translation}}</ion-label>
+                <ion-select  (ngModelChange)="qty_change($event)" class="myCustomSelect" [(ngModel)]="quantity" name="qtyfield">
+                  <ion-option *ngFor="let c of quantities" value="{{c}}" >{{c}}</ion-option> 
+                </ion-select>
+            </ion-item>
           <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
               <ion-card-header>
-              Total
+                  {{'total'|translation}}
               </ion-card-header>
           </ion-col>
           <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
             <ion-card-header text-right>
-               Q {{current_total}}
+               Q {{total}}
             </ion-card-header>
           </ion-col>
         </ion-row>
@@ -134,7 +146,7 @@
           <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
               <button  ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid">
                   <ion-icon item-right name="cart" ></ion-icon>
-                  Order</button>
+                  {{'order'|translation}}</button>
             </ion-col>
             </ion-row>
       </ion-card>

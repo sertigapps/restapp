@@ -34,6 +34,9 @@ public openAdmin(){
 public seecategory(cat){
   this.navCtrl.push('MenuCategoryPage',{"category":cat})
 }
+public see_top(){
+  this.navCtrl.push('TopMenuPage')
+}
 
 
 }

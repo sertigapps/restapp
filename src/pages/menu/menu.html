@@ -22,6 +22,9 @@
 
 
 <ion-content class="card-background-page" padding>
+    <ion-fab right bottom>
+        <button (click)="see_top()" ion-fab color="yellow" ><ion-icon name="star"></ion-icon>TOP</button>
+        </ion-fab>
   <ion-card *ngFor="let c of menuprovider.categories" (click)="seecategory(c)">
    <img *ngIf="c.full_record.image_url" src="{{c.full_record.image_url}}"/>
     <div class="card-title">{{c.name}}</div>

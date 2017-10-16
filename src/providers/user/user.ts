@@ -19,7 +19,7 @@ export class UserProvider {
   public emailaddress:String;
   constructor(public http: Http) {
     console.log('Hello UserProvider Provider');
-    this.load_new_users();
+    //this.load_new_users();
   }
   public logged_in(name,lastname,token,emailaddress,full){
     this.token = token;
@@ -70,5 +70,30 @@ export class UserProvider {
     console.log('Error approving user');
   });
     
+  }
+  block_user(emailaddress,id){
+    this.http.get(this.url+'query/person_token/emailaddress/'+this.emailaddress+'/EQ/status_code/1/EQ')
+    .map(res => res.json()).subscribe((data)=>{
+      data.forEach((i)=>{
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+        headers.append('sertig_token',this.token.toString());
+        headers.append('sertig_email',this.emailaddress.toString());
+        let put_data= {"status_code":-1};
+      this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/person_token/emailaddress/'+i.emailaddress+'/token/'+i.token
+      , JSON.stringify(put_data), options).map(res => res.json()).subscribe((j)=>{
+        console.log('Deleted token');
+      })
+      });
+    });
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+    headers.append('sertig_token',this.token.toString());
+    headers.append('sertig_email',this.emailaddress.toString());
+    let put_data= {"status_code":3};
+  return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/person/id/'+id
+  , JSON.stringify(put_data), options).map(res => res.json());
   }
 }

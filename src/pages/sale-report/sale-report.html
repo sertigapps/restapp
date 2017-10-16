@@ -1,0 +1,75 @@
+<ion-header>
+    <ion-navbar>
+      <button ion-button menuToggle icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+      <ion-title>
+        {{'sale_report'|translation}}
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  
+  <ion-content padding>
+        <ion-item>
+            <ion-label>{{'start_date'|translation}}</ion-label>
+            <ion-datetime doneText="{{'done'|translation}}" [monthNames]="monthnames"  cancelText="{{'cancel'|translation}}" pickerFormat="DD MMMM YYYY" displayFormat="DD/MM/YYYY" displayFormat="DD/MM/YYYY"  [(ngModel)]="startdate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+              <ion-label>{{'end_date'|translation}}</ion-label>
+              <ion-datetime doneText="{{'done'|translation}}" [monthNames]="monthnames"  cancelText="{{'cancel'|translation}}" pickerFormat="DD MMMM YYYY" displayFormat="DD/MM/YYYY" displayFormat="DD/MM/YYYY"  [(ngModel)]="enddate"></ion-datetime>
+        </ion-item>
+
+        <ion-row>
+            <ion-col class="signup-col">
+              <button ion-button (click)="generate_report()" class="submit-btn" full type="button" >{{'generate' |translation}}</button>
+            </ion-col>
+          </ion-row>
+          <ion-card  *ngIf="this.loading_report" >
+              <ion-card-header>
+                {{'loading'|translation}} ....
+              </ion-card-header>
+            </ion-card>
+          <ion-card  *ngIf="!this.cartprovider.loading_report" >
+              <ion-grid>
+                <ion-row>
+                    <ion-col col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8>
+                      <ion-select class="myCustomSelect" (ngModelChange)="show_report($event)" [(ngModel)]="report_type" >
+                        <ion-option value="byitem"  >{{'byitem'|translation}}</ion-option>
+                        <ion-option value="bycat"  >{{'bycat'|translation}}</ion-option>
+                        <ion-option value="byuser"  >{{'byuser'|translation}}</ion-option>
+                      </ion-select>
+                    </ion-col>
+                    <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                        <p class="pmargintop">{{'qty.'|translation}}</p>
+                    </ion-col>
+                    <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                        <p class="pmargintop">{{'total'|translation}}</p>
+                    </ion-col>
+                </ion-row>
+                <ion-row  *ngFor="let y of index_array;let i = index;">
+                    <ion-col col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8>
+                        <p class="pmargintop">{{report_indexes[y]}}</p>
+                      </ion-col>
+                      <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                          <p class="pmargintop">{{report_objects[y].qty}}</p>
+                      </ion-col>
+                      <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                          <p class="pmargintop">{{report_objects[y].total}}</p>
+                      </ion-col>
+                </ion-row>
+                <ion-row class="row_total" >
+                    <ion-col col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8>
+                        <p class="pmargintop boldfont">{{'total'|translation}}</p>
+                      </ion-col>
+                      <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                          <p class="pmargintop boldfont">{{qty_total}}</p>
+                      </ion-col>
+                      <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+                          <p class="pmargintop boldfont">{{total}}</p>
+                      </ion-col>
+                </ion-row>
+              </ion-grid>
+          </ion-card>
+  </ion-content>
+ 

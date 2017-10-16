@@ -52,12 +52,12 @@
           <ion-row  [hidden]="item.full_record.menu_flag != 1"  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
             
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-select class="myCustomSelect" (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+              <ion-select class="myCustomSelect" required (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option *ngFor="let c of menuprovider.items; let i = index;trackBy: customTrackBy" value="{{c.id}},{{c.name}}" >{{c.name}}</ion-option>
               </ion-select>
             </ion-col>
             <ion-col *ngIf="item.full_record.included[i]" col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
-              <ion-select class="myCustomSelect" [(ngModel)]="item.full_record.included_types[i]" name="IncludedType{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+              <ion-select class="myCustomSelect" required [(ngModel)]="item.full_record.included_types[i]" name="IncludedType{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
                 <ion-option  *ngFor="let c of menuprovider.getitem(item.full_record.included[i]).full_record.price_label; let i = index;trackBy: customTrackBy" value="{{c}}" >{{c}}</ion-option>
               </ion-select>
             </ion-col>

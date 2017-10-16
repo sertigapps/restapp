@@ -17,11 +17,20 @@ import { TranslationPipe } from "../../pipes/translation/translation";
   templateUrl: 'admin-menus.html',
 })
 export class AdminMenusPage {
-
+  search_cats:any;
+  search_scats:any;
+  selected_scats:any;
   loading_avails:boolean;
   constructor(public translate : TranslationPipe,private alertCtrl: AlertController,public menuprovider:MenuProvider,public userprovider: UserProvider,public modalCtrl: ModalController,public navCtrl: NavController, public navParams: NavParams) {
+    this.search_cats = [];
+    this.search_scats = [];
+    this.selected_scats = [];
   }
-
+  update_options(e){
+    this.search_scats = this.menuprovider.sub_categories.filter((a)=>{
+      return e.indexOf(a.category_id+"")>-1;
+    });
+  }
   ionViewDidLoad() {
     this.loading_avails=true;
     console.log('ionViewDidLoad AdminItemsPage');

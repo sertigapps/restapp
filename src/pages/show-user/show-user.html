@@ -38,6 +38,14 @@
           </a>
         </ion-col>
         </ion-row>
+        <ion-row >
+          <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+        <button full (click)="block_user()" ion-button round >
+          <ion-icon name="close-circle" item-start></ion-icon>
+          {{block_message}}
+        </button>
+      </ion-col>
+      </ion-row>
         <ion-row *ngFor="let c of orders;let i = index;">
             <ion-col col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
                 <p> {{c.item_name}}</p>

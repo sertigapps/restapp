@@ -74,6 +74,7 @@ export class MyApp {
   
   fetchUserLoged(id,token){
       let loading = this.loadingCtrl.create({content : this.translate.transform('loading')+".."});
+      loading.present();
       this.http.get(this.url+'person/id/'+id).map(res => res.json()).subscribe(res=>{
         loading.dismissAll();
         if(res.errorMessage){
@@ -100,7 +101,7 @@ export class MyApp {
               this.showPopup(res.errorMessage,'');
             }
             else{
-              if(!res || res.status_code ===0){
+              if(!res || res.status_code !=1){
                   if(this.platform.is('ios')){
                     this.keychain.set('sertig_token',JSON.stringify(false)).
                     then(()=>console.log('Deleted Id and Token',''))
@@ -273,7 +274,9 @@ export class MyApp {
                     if(element.full_record.stage==4){
                       element.full_record.status_code = 2;
                     }
-                    element.full_record.estimated_time = notification.additionalData.estimated_time;
+                    if(notification.additionalData.estimated_time){
+                      element.full_record.estimated_time = notification.additionalData.estimated_time;
+                    }
                   }
                 });
                 if(!found ){
@@ -318,7 +321,7 @@ export class MyApp {
     this.nav.setRoot(page);
   }
   logout() {
-    this.showPopup(this.userprovider.emailaddress,this.userprovider.token);
+    //this.showPopup(this.userprovider.emailaddress,this.userprovider.token);
       let loading = this.loadingCtrl.create({content : this.translate.transform("login_out")+ ".."});
     this.authservice.logout(this.userprovider.emailaddress,this.userprovider.token).subscribe(res => {
       loading.dismissAll();

@@ -211,7 +211,9 @@ export class LoginPage {
                   if(element.full_record.stage==4){
                     element.full_record.status_code = 2;
                   }
-                  element.full_record.estimated_time = notification.additionalData.estimated_time;
+                  if(notification.additionalData.estimated_time){
+                    element.full_record.estimated_time = notification.additionalData.estimated_time;
+                  }
                 }
               });
               if(!found ){

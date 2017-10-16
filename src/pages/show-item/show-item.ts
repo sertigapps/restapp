@@ -46,6 +46,7 @@ export class ShowItemPage {
 
   extra_price:any;
   extra_total:any;
+  disabled_order:boolean=false;
 
   constructor(public translate : TranslationPipe,public userprovider:UserProvider,public menuprovider:MenuProvider, public navCtrl: NavController,  
                 public actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController,public cartprovider:CartProvider,
@@ -101,9 +102,11 @@ export class ShowItemPage {
       this.extras_item_added[item_included.id] = [];
       this.ingredients_item[item_included.id] = (item_included.full_record.ingredients)? JSON.parse(JSON.stringify(item_included.full_record.ingredients)):[];
       this.ingredients_item_selected[item_included.id] = (item_included.full_record.ingredients)? JSON.parse(JSON.stringify(item_included.full_record.ingredients)):[];
-      item_included.full_record.ingredients.forEach(element => {
-        this.ingredients_item_included[item_included.id][element.split(',')[0]]=true;
-      });
+      if(item_included.full_record.ingredients){
+        item_included.full_record.ingredients.forEach(element => {
+          this.ingredients_item_included[item_included.id][element.split(',')[0]]=true;
+        });
+      }
       this.extras_item[item_included.id] = this.menuprovider.ingredients.filter(i=>{
         return !this.ingredients_item_included[item_included.id][i.id];
       });
@@ -170,10 +173,10 @@ qty_change(qty){
     Object.keys(this.extra_price).forEach((i)=>{
       this.extra_total+=this.extra_price[i]*this.quantity;
     });
-    debugger;
     this.total+=this.extra_total;
   }
   create_order(){
+    this.disabled_order= true;
     this.userprovider.get_store_settings().subscribe((data)=>{
       if(data['orders_available']!=1){
         let alert = this.alertCtrl.create({
@@ -306,6 +309,7 @@ qty_change(qty){
                 this.cartprovider.notify_new_order(this.userprovider.user.emailaddress).subscribe((notif_data)=>{
                   this.cartprovider.place_order_request(order,this.userprovider.user.emailaddress,this.userprovider.user.token).subscribe((data)=>{
                     this.item.add_order(this.userprovider.emailaddress,this.userprovider.token);
+                    this.cartprovider.add_order(data);
                     let alert = this.alertCtrl.create({
                       title: this.translate.transform('order_created'),
                       subTitle:this.translate.transform('ready_msg'),
@@ -338,6 +342,8 @@ qty_change(qty){
         });
         alert.present();
       }
+
+      this.disabled_order= false;
     });
   }
     

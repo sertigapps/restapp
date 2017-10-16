@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, Platform,NavController, ViewController,NavParams } from 'ionic-angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { IonicPage, Platform,NavController,LoadingController,AlertController, ViewController,NavParams } from 'ionic-angular';
 import { AppAvailability } from '@ionic-native/app-availability';
-import { Device } from '@ionic-native/device';
 import { CallNumber } from '@ionic-native/call-number';
-import { CartProvider } from '../../providers/cart/cart'
+import { CartProvider } from '../../providers/cart/cart';
+import { UserProvider } from '../../providers/user/user';
+import { TranslationPipe } from "../../pipes/translation/translation";
 
 /**
  * Generated class for the ContactUsPage page.
@@ -21,10 +21,12 @@ import { CartProvider } from '../../providers/cart/cart'
 export class ShowUserPage {
   public userinfo:any;
   public orders:Array<any>;
-  constructor(public cartprovider:CartProvider,public params: NavParams, private callNumber: CallNumber,public apavail:AppAvailability,public platform: Platform,
-    public viewCtrl: ViewController,public navCtrl: NavController,private iab: InAppBrowser, public navParams: NavParams) {
+  public block_message:string;
+  constructor( public translate : TranslationPipe,public userprovider:UserProvider,public cartprovider:CartProvider,public params: NavParams, private callNumber: CallNumber,public apavail:AppAvailability,public platform: Platform,
+    public viewCtrl: ViewController,public navCtrl: NavController,public alertCtrl:AlertController, public navParams: NavParams, public loadingCtrl: LoadingController) {
     this.userinfo = this.params.get('userinfo');
     this.orders = [];
+    this.block_message = this.translate.transform('block_user');
   }
 
   ionViewDidLoad() {
@@ -34,7 +36,32 @@ export class ShowUserPage {
   dismiss() {
     this.viewCtrl.dismiss();
   }
-
+  block_user(){
+    let alert2 = this.alertCtrl.create({
+      title: this.translate.transform('confirm_block_user'),
+      buttons: [
+        {
+          text:this.translate.transform('yes'),
+          handler: data =>{
+            let loading_2 = this.loadingCtrl.create({
+              content: this.translate.transform('loading'),
+            });
+            loading_2.present();
+            this.userprovider.block_user(this.userinfo.emailaddress,this.userinfo.personid).subscribe((data)=>{
+              loading_2.dismissAll();
+              this.block_message = this.translate.transform('user_blocked');
+            });
+          }
+        },
+        {
+          text:this.translate.transform('cancel'),
+          role:'cancel',
+        }
+      ]
+    });
+    alert2.present();
+    
+  }
   call(){
     if(this.userinfo.phonenumber){
     this.callNumber.callNumber(this.userinfo.phonenumber, true)

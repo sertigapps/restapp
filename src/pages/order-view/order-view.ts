@@ -126,8 +126,7 @@ advance(order){
             content: this.translate.transform('updating_order'),
           });
           this.loading.present();
-          let now_time = new Date();
-          let estimated_label = (new Date(now_time.getTime()+(60000*data.estimated_time))).toLocaleString();
+          let estimated_label = false;
           order.notify_update(estimated_label);
           order.advance(this.userprovider.user.emailaddress,this.userprovider.user.token,estimated_label).subscribe((data)=>{
             this.loading.dismissAll();

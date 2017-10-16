@@ -1,5 +1,4 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
-import {Observable} from 'rxjs'
 import 'rxjs/add/operator/map';
 
 export class Order {
@@ -35,7 +34,7 @@ export class Order {
     if(new_stage==4){
       put_data['status_code']=2;
     }
-    if(estimated_time!=''){
+    if(estimated_time){
       put_data['estimated_time'] = estimated_time;
     }
   return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order/id/'+this.id, JSON.stringify(put_data), options)
@@ -74,14 +73,53 @@ export class Order {
             "note_type":"Order Updated",
             "order_id":this.id,
             "emailaddress": element.emailaddress,
-            "new_status":this.full_record.stage+1,
-            "estimated_time":estimated_time
+            "new_status":this.full_record.stage+1
            }
+          }
+          if(estimated_time){
+            data_not['data']['estimated_time']=estimated_time;
           }
           this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data_not), options).map(res => res.json()).subscribe((data)=>{
             console.log('User Notified');
           });
         }
+      });
+    });
+  }
+  rate(emailaddress,token,rating,callback: (success) => void){
+    this.http.get(this.url+'/item/id/'+this.full_record.item_id)
+    .map(res => res.json()).subscribe((data)=>{
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+        headers.append('sertig_token',token.toString());
+        headers.append('sertig_email',emailaddress.toString());
+        let put_data= {};
+        if(!data.ratings){
+          put_data['ratings']=[rating]; 
+        }else{
+          data.ratings.push(rating);
+          put_data['ratings']=data.ratings; 
+        }
+        if(!data.rating_emails){
+          put_data['rating_emails']=[emailaddress]; 
+        }else{
+          data.rating_emails.push(emailaddress);
+          put_data['rating_emails']=data.rating_emails; 
+        }  
+      this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/item/id/'+this.full_record.item_id, JSON.stringify(put_data), options)
+      .map(res => res.json()).subscribe((data_item)=>{
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+        headers.append('sertig_token',token.toString());
+        headers.append('sertig_email',emailaddress.toString());
+        put_data = {'ranked':rating};
+        this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order/id/'+this.id, JSON.stringify(put_data), options)
+        .map(res => res.json()).subscribe((order_data)=>{
+          this.full_record.ranked =rating;
+          callback(true);
+        });
       });
     });
   }

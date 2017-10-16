@@ -120,5 +120,10 @@ export class CartProvider {
     };
   return this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data), options).map(res => res.json());
   }
-
+  fetch_report_orders(start_date,end_date){
+    let start = (new Date(start_date.split('T')[0]+' 00:00:00')).getTime();
+    let end = (new Date(end_date.split('T')[0]+' 23:59:00')).getTime();
+    return this.http.get(this.url+'query/order/status_code/2/EQ/create_date/'+start+','+end+'/BT')
+    .map(res => res.json());
+  }
 }

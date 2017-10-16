@@ -30,6 +30,9 @@
         <ion-badge color="azul" item-end *ngIf="c.full_record.order_count">
             {{c.full_record.order_count}}
         </ion-badge>
+        <ion-badge color="warning" item-end *ngIf="!loading_avails && c.full_record.availability != 1">
+          {{'disabled'|translation}}
+      </ion-badge>
       </ion-item>
       <ion-item-options>
           <button ion-button *ngIf="!loading_avails && c.full_record.availability == 1" color="warning" icon-start (click)="switch_availability(c)">

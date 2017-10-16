@@ -6,7 +6,7 @@ import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
 import { Camera } from '@ionic-native/camera';
 import { UserProvider } from '../../providers/user/user';
-import { Http} from '@angular/http';
+import { Http,Headers,RequestOptions} from '@angular/http';
 import { MenuProvider } from '../../providers/menu/menu';
 import { SubCategory } from '../../app/models/subcategory';
 import { TranslationPipe } from "../../pipes/translation/translation";
@@ -90,6 +90,19 @@ remove_item(index){
 remove_image(index){
   if(index == this.item.full_record.images.length -1){
     this.slides.slideTo(index-1);
+  }
+  if(this.item.full_record.images[index] && this.item.full_record.images[index]!=''){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let options = new RequestOptions({ headers: headers });
+    headers.append('sertig_token',this.userprovider.token.toString());
+    headers.append('sertig_email',this.userprovider.emailaddress.toString());
+    
+    let data = {item:this.item.full_record.images[index].split('/').pop(),appid:'labarraapp'};
+    
+  this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/deleteimage', JSON.stringify(data), options).map(res => res.json()).subscribe((data)=>{
+  console.log('imagedeleted');
+  });
   }
   this.item.full_record.images.splice(index,1);
 }

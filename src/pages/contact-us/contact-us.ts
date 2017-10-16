@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, Platform,NavController, NavParams } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppAvailability } from '@ionic-native/app-availability';
-import { Device } from '@ionic-native/device';
 import { CallNumber } from '@ionic-native/call-number';
 import { LaunchNavigator } from '@ionic-native/launch-navigator';
 
@@ -36,15 +35,18 @@ export class ContactUsPage {
       app = androidPackageName;
     } else {
       let browser = this.iab.create(httpUrl + username, '_system');
+      browser.show();
       return;
     }
   
     this.apavail.check(app).then(
       () => { // success callback
         let browser = this.iab.create(appUrl + username, '_system');
+        browser.show();
       },
       () => { // error callback
         let browser = this.iab.create(httpUrl + username, '_system');
+        browser.show();
       }
     );
   }

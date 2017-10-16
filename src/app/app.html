@@ -14,7 +14,7 @@
   <ion-content>
     <ion-list>
 
-        <button menuClose *ngIf="userprovider && userprovider.user && userprovider.user.full_record.admin_flag == 1" ion-item  (click)="openPage('ApproveUsersPage')">
+        <button menuClose *ngIf="userprovider && userprovider.user && userprovider.user.full_record.admin_flag == 1" ion-item  (click)="nav.push('ApproveUsersPage')">
             {{ 'approve_users' | translation }}
             <ion-icon class="icon-yellow" item-end name='person-add'></ion-icon>
             <ion-badge *ngIf="userprovider && userprovider.newusers && userprovider.newusers.length">
@@ -22,10 +22,14 @@
             </ion-badge>
         </button>
 
-      <button menuClose *ngIf="userprovider && userprovider.user && userprovider.user.full_record.admin_flag == 1" ion-item  (click)="openPage('GeneralSettingsPage')">
+      <button menuClose *ngIf="userprovider && userprovider.user && userprovider.user.full_record.admin_flag == 1" ion-item  (click)="nav.push('GeneralSettingsPage')">
           {{ 'general_settings' | translation }}
           <ion-icon class="icon-yellow" item-end name='settings'></ion-icon>
       </button>
+      <button menuClose *ngIf="userprovider && userprovider.user && userprovider.user.full_record.admin_flag == 1" ion-item  (click)="nav.push('SaleReportPage')">
+            {{ 'sale_report' | translation }}
+            <ion-icon class="icon-yellow" item-end name='settings'></ion-icon>
+        </button>
       <button menuClose ion-item  (click)="openPage('HomePage')">
         {{'home' | translation}}
         <ion-icon item-end class="icon-yellow" name='home'></ion-icon>

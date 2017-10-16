@@ -32,8 +32,12 @@
           <h2>{{it.name}}</h2>
           <p>{{it.full_record.description}}</p>
           <p>
-          <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
-        </p>
+            <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+          </p>
+          <p  *ngIf="it.rate >0" >
+            <ion-badge color="yellow">{{it.rate}}
+              <ion-icon class="no_margin" icon-xs item-right name="star" ></ion-icon></ion-badge>
+          </p>
           <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
             {{'order'|translation}}
             <ion-icon name="cart"></ion-icon></button>
@@ -56,6 +60,10 @@
           <p>{{it.full_record.description}}</p>
           <p>
           <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+        </p>
+        <p  *ngIf="it.rate >0" >
+          <ion-badge color="yellow">{{it.rate}}
+            <ion-icon class="no_margin" icon-xs item-right name="star" ></ion-icon></ion-badge>
         </p>
           <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
               {{'order'|translation}}

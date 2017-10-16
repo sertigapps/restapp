@@ -17,20 +17,25 @@ export class MyOrdersPage {
   public user:User;
   lastImage: string = null;
   loading: Loading;
+  ratings:any;
+  
   sections_open:any = {};
   constructor(  public cartprovider:CartProvider,public userprovider:UserProvider,public menuprovider:MenuProvider, public navCtrl: NavController,private menu: MenuController,  
                 public actionSheetCtrl: ActionSheetController, public alertCtrl:AlertController,public translate:TranslationPipe,
                 public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController,private launchNavigator: LaunchNavigator) { 
     this.user = this.userprovider.user;
     this.menu.enable(true, 'sidenav'); 
+    this.ratings = {};
+    this.cartprovider.myorders.forEach((data)=>{
+      if(data.full_record.ranked){
+        this.ratings[data.id] = data.full_record.ranked;
+      }
+    });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad My oRDERS ');
   }
-  
- 
-
 public openAdmin(){
   this.navCtrl.push('AdminPage');
 }
@@ -40,11 +45,32 @@ open_maps(){
 toggleSection(id){
   this.sections_open[id] = !this.sections_open[id];
 }
+rate_object(order){
+  if(this.ratings[order.id]){
+  let loading = this.loadingCtrl.create({content : this.translate.transform('loading')+".."});
+  loading.present();
+  order.rate(this.userprovider.emailaddress,this.userprovider.token,this.ratings[order.id],(success)=>{
+    if(success){
+      loading.dismissAll();
+    }
+  });
+}
+}
 load_prev_orders(){
   this.cartprovider.fetch_my_prev_orders(this.userprovider.emailaddress);
+  this.cartprovider.myorders.forEach((data)=>{
+    if(data.full_record.ranked){
+      this.ratings[data.id] = data.full_record.ranked;
+    }
+  });
 }
 refresh_my_orders(){
   this.cartprovider.refresh_my_orders(this.userprovider.emailaddress);
+  this.cartprovider.myorders.forEach((data)=>{
+    if(data.full_record.ranked){
+      this.ratings[data.id] = data.full_record.ranked;
+    }
+  });
 }
 cancel(c){
   let alert = this.alertCtrl.create({

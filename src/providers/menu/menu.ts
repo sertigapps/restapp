@@ -100,6 +100,16 @@ export class MenuProvider {
     });
     return to_return;
   }
+  getcat(id_name){
+    var to_return : Ingredient;
+    var id = id_name.split(',')[0];
+    this.categories.forEach((i)=>{
+      if(i.id==id){
+        to_return = new Ingredient(i.id,i.name,i.full_record,this.http);
+      }
+    });
+    return to_return;
+  }
   insertcategory(category:Category){
     this.categories.push(category);
     this.ordercategories();

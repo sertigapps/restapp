@@ -7,11 +7,17 @@ export class Item {
   id:number;
   category_id:number;
   price:number;
+  rate:string
   full_record:any;
   base_record:any;
   http:Http;
  
   constructor(id:number,category_id:number,name: string, full_record:any, http:Http) {
+    this.rate = '0';
+    if(full_record.ratings){
+      var sum = full_record.ratings.reduce((x, y) => x + y);
+      this.rate = Math.round(sum / full_record.ratings.length).toFixed(2);
+    }
     this.name = name;
     this.id = id;
     this.category_id = category_id;

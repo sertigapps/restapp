@@ -6,7 +6,7 @@ import { Transfer, TransferObject } from '@ionic-native/transfer';
 import { FilePath } from '@ionic-native/file-path';
 import { Camera } from '@ionic-native/camera';
 import { UserProvider } from '../../providers/user/user';
-import { Http} from '@angular/http';
+import { Http,Headers,RequestOptions} from '@angular/http';
 import { TranslationPipe } from "../../pipes/translation/translation";
 declare var cordova: any;
 
@@ -188,6 +188,19 @@ public uploadImage() {
     var data_res= JSON.parse(data['response']);
     if(data_res.error){
       this.presentToast(data_res.message);
+    }
+    if(this.user.full_record.image_url && this.user.full_record.image_url!=''){
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      let options = new RequestOptions({ headers: headers });
+      headers.append('sertig_token',this.userprovider.token.toString());
+      headers.append('sertig_email',this.userprovider.emailaddress.toString());
+      
+      let data = {item:this.user.full_record.image_url.split('/').pop(),appid:'labarraapp'};
+      
+    this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/deleteimage', JSON.stringify(data), options).map(res => res.json()).subscribe((data)=>{
+    console.log('imagedeleted');
+    });
     }
     this.image_uploaded = this.pathForImageShow(this.lastImage);
     this.user.full_record.image_url = this.image_uploaded;

@@ -42,6 +42,7 @@ export class LoginPage {
       loading.dismissAll();
       if (!res.errorMessage) {
         this.userprovider.logged_in(res.name,res.lastname,res.token,res.emailaddress,res);
+        console.log(this.platform._platforms);
         if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify({id:res.id,token:res.token})).
           then(()=>console.log('Stored Id and Token',''))

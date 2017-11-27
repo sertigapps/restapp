@@ -1,6 +1,5 @@
 import { Component ,ViewChild} from '@angular/core';
 import { Platform,AlertController,LoadingController,Loading ,Nav} from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
 import {HomePage} from '../pages/home/home';
 import { Order } from '../app/models/order';
 import { Keychain } from '@ionic-native/keychain';
@@ -26,10 +25,9 @@ export class MyApp {
   rootPage:any ;
 
   constructor(  public translate : TranslationPipe,public cartprovider:CartProvider,public userprovider:UserProvider, public authservice:AuthServiceProvider,public platform: Platform,
-                private nativeStorage:NativeStorage, private keychain: Keychain,public splashScreen: SplashScreen,public push: Push, public modalCtrl: ModalController,
+                private nativeStorage:NativeStorage, private keychain: Keychain,public push: Push, public modalCtrl: ModalController,
                 private alertCtrl: AlertController,public http: Http, private loadingCtrl: LoadingController) {
     platform.ready().then(() => {
-        this.splashScreen.hide();
       if(platform.is('ios')){
         this.keychain.get('sertig_token')
         .then(value=>{
@@ -80,7 +78,7 @@ export class MyApp {
         if(res.errorMessage){
           this.showPopup(res.errorMessage,'');
           if(this.platform.is('ios')){
-          this.keychain.set('sertig_token',JSON.stringify(false)).
+          this.keychain.set('sertig_token',JSON.stringify(false),false).
           then(()=>console.log('Deleted Id and Token',''))
           .catch(err=> console.log('Error deleting item IOS',err));
               this.nav.setRoot ( 'LoginPage');
@@ -103,7 +101,7 @@ export class MyApp {
             else{
               if(!res || res.status_code !=1){
                   if(this.platform.is('ios')){
-                    this.keychain.set('sertig_token',JSON.stringify(false)).
+                    this.keychain.set('sertig_token',JSON.stringify(false),false).
                     then(()=>console.log('Deleted Id and Token',''))
                     .catch(err=> console.log('Error deleting item IOS',err));
                         this.nav.setRoot ( 'LoginPage');
@@ -211,7 +209,7 @@ export class MyApp {
   pushsetup(callback) {
   const options: PushOptions = {
       android: {
-          senderID: '1066733044729',
+          // senderID: '1066733044729',
           sound:true,
           vibrate:true
       },
@@ -327,7 +325,7 @@ export class MyApp {
       loading.dismissAll();
       if(!res.errorMessage){
         if(this.platform.is('ios')){
-          this.keychain.set('sertig_token',JSON.stringify(false)).
+          this.keychain.set('sertig_token',JSON.stringify(false),false).
           then(()=>console.log('Deleted Id and Token',''))
           .catch(err=> console.log('Error deleting item IOS',err));
         }

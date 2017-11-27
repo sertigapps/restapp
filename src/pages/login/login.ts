@@ -42,9 +42,8 @@ export class LoginPage {
       loading.dismissAll();
       if (!res.errorMessage) {
         this.userprovider.logged_in(res.name,res.lastname,res.token,res.emailaddress,res);
-        console.log(this.platform._platforms);
         if(this.platform.is('ios')){
-          this.keychain.set('sertig_token',JSON.stringify({id:res.id,token:res.token})).
+          this.keychain.set('sertig_token',JSON.stringify({id:res.id,token:res.token}),false).
           then(()=>console.log('Stored Id and Token',''))
           .catch(err=> console.log('Error storing item IOS',err));
         }
@@ -149,7 +148,7 @@ export class LoginPage {
   pushsetup(callback) {
   const options: PushOptions = {
       android: {
-          senderID: '1066733044729',
+          // senderID: '1066733044729',
           sound:true,
           vibrate:true
       },

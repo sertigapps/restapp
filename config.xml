@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="sertig.restaurant.demo" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="sertig.restaurant.labarra" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>La Barra</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <description>Aplicacion para ordenar articulos a cevicheria La Barra</description>
+    <author email="lrglm16@gmail.com" href="http://sertigapps.com/">Sertig Apps Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
@@ -79,25 +79,28 @@
     </platform>
     <allow-navigation href="http://192.168.1.162:8100" />
     <allow-navigation href="http://192.168.56.1:8100" />
-    <plugin name="cordova-plugin-cache-clear" spec="^1.3.7" />
-    <plugin name="cordova-plugin-camera" spec="^2.4.1" />
+    <allow-navigation href="http://192.168.1.235:8100" />
+    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-console" spec="^1.0.5" />
+    <plugin name="cordova-plugin-device" spec="^1.1.4" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.2" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
     <plugin name="cordova-plugin-filepath" spec="^1.0.2" />
     <plugin name="cordova-plugin-ios-keychain" spec="^3.0.1" />
     <plugin name="cordova-plugin-nativestorage" spec="^2.2.2" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.2.2" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <engine name="browser" spec="~4.1.0" />
-    <engine name="android" spec="~6.2.3" />
+    <plugin name="cordova-plugin-cache-clear" spec="^1.3.7" />
     <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
     <plugin name="cordova-plugin-appavailability" spec="^0.4.2" />
-    <plugin name="cordova-plugin-device" spec="^1.1.4" />
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
     <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="^4.0.6">
         <variable name="LOCATION_USAGE_DESCRIPTION" value="This app requires access to your location for navigation purposes" />
+    </plugin>
+    <plugin name="phonegap-plugin-push" spec="^2.1.1">
+        <variable name="SENDER_ID" value="1066733044729" />
     </plugin>
 </widget>

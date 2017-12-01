@@ -169,7 +169,7 @@ public pathForImageShow(img) {
 }
 public uploadImage() {
   // Destination URL
-  var url = "http://ec2-54-237-201-190.compute-1.amazonaws.com/upload/upload_image.php";
+  var url = "http://34.195.122.172/upload/upload_image.php";
  
   // File for Upload
   var targetPath = this.pathForImage(this.lastImage);
@@ -221,6 +221,7 @@ public uploadImage() {
     this.image_uploaded = this.pathForImageShow(this.lastImage);
     this.category.full_record.image_url = this.image_uploaded;
   }, err => {
+    console.log(err);
     this.loading.dismissAll()
     this.presentToast(this.translate.transform('error_uploading'));
   });

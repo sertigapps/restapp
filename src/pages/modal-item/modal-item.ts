@@ -237,7 +237,7 @@ public gotoLast(){
 }
 public uploadImage() {
   // Destination URL
-  var url = "http://ec2-54-237-201-190.compute-1.amazonaws.com/upload/upload_image.php";
+  var url = "http://34.195.122.172/upload/upload_image.php";
  
   // File for Upload
   var targetPath = this.pathForImage(this.lastImage);

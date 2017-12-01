@@ -43,13 +43,14 @@
                     <ion-label >{{'includes'|translation}}</ion-label>
             </ion-col>
 
-            <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+            <ion-col [hidden]="item.full_record.menu_flag != 1" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
                    <button type="button" (click)="add_item()"  ion-button full color="secondary" item-end icon-only>
                       <ion-icon clear  name="add-circle"></ion-icon>
                     </button>
             </ion-col>
             </ion-row>
-          <ion-row  [hidden]="item.full_record.menu_flag != 1"  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
+          <ion-item *ngIf="item.full_record.menu_flag == 1">
+          <ion-row  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
             
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
               <ion-select class="myCustomSelect" required (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
@@ -68,6 +69,7 @@
             </ion-col>
 
           </ion-row>
+        </ion-item>
           <ion-item>
               <ion-input type="text" placeholder="{{'label_type'|translation}}" name="label_type" [(ngModel)]="item.full_record.label_type" ></ion-input>
             </ion-item>

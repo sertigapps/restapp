@@ -112,11 +112,17 @@ export class CartProvider {
     let options = new RequestOptions({ headers: headers });
     let data = {
       "to": "/topics/neworder",
+      "priority" : "high",
       "data": {
         "message": "Nueva Orden Recibida",
         "note_type": "New Order Received",
         "emailaddress": emailaddress
-       }
+       },
+       "notification" : {
+        "body" : "Nueva Orden Recibida",
+        "title" : "Nueva Orden Recibida",
+        "icon" : "new"
+      }
     };
   return this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data), options).map(res => res.json());
   }

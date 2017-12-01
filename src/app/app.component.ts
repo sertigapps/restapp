@@ -31,7 +31,7 @@ export class MyApp {
       if(platform.is('ios')){
         this.keychain.get('sertig_token')
         .then(value=>{
-          if(value){
+          if(value!="false"){
             value = JSON.parse(value);
             this.fetchUserLoged(value.id,value.token);
           }
@@ -73,6 +73,7 @@ export class MyApp {
   fetchUserLoged(id,token){
       let loading = this.loadingCtrl.create({content : this.translate.transform('loading')+".."});
       loading.present();
+      console.log(this.url+'person/id/'+id);
       this.http.get(this.url+'person/id/'+id).map(res => res.json()).subscribe(res=>{
         loading.dismissAll();
         if(res.errorMessage){
@@ -121,52 +122,60 @@ export class MyApp {
           //push token
                   this.pushsetup((registration_id,err)=>{
                     if(registration_id){
-                      this.save_registration(registration_id.registrationId);
-                      if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
-                        this.pushObject.subscribe('neworder').then((data)=>{
-                          if(data!="OK"){
-                            this.showPopup('Error subscribing to new orders','');
-                             this.pushObject.subscribe('newuser').then((data)=>{
-                              if(data!="OK"){
+                      this.save_registration(registration_id.registrationId,()=>{
+
+                        if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
+                          this.pushObject.subscribe('neworder').then((data)=>{
+                            console.log('Subscribed to New Orders');
+                               this.pushObject.subscribe('newuser').then((data)=>{
+                                console.log('Subscribed to New users');
+                              },
+                              (e) => {
                                 this.showPopup('Error subscribing to new orders','');
-                              }
+                                console.log('error:', e);
+                              });
+                          }
+                          ,(e) => {
+                            this.pushObject.subscribe('newuser').then((data)=>{
+                              console.log('Subscribed to New users');
+                            },
+                            (e) => {
+                              this.showPopup('Error subscribing to new orders','');
+                              console.log('error:', e);
                             });
-                          }
-                        });
-                        
-                     /* this.pushObject.subscribe('neworder').then((data)=>{
-                          if(data!="OK"){
                             this.showPopup('Error subscribing to new orders','');
-                          }
-                        });
-                        this.pushObject.subscribe('newuser').then((data)=>{
-                          if(data!="OK"){
-                            this.showPopup('Error subscribing to new orders','');
-                          }
-                        });*/
-                      }
-                      else{
-                        this.pushObject.unsubscribe('neworder').then((data)=>{
-                          if(data!="OK"){
-                            this.showPopup('Error unsubscribing to new orders','');
-                          }
-                          this.pushObject.unsubscribe('newuser').then((data)=>{
+                            console.log('error:', e);
+                          });
+                          
+                       /* this.pushObject.subscribe('neworder').then((data)=>{
+                            if(data!="OK"){
+                              this.showPopup('Error subscribing to new orders','');
+                            }
+                          });
+                          this.pushObject.subscribe('newuser').then((data)=>{
+                            if(data!="OK"){
+                              this.showPopup('Error subscribing to new orders','');
+                            }
+                          });*/
+                        }
+                        else{
+                          this.pushObject.unsubscribe('neworder').then((data)=>{
+                            this.pushObject.unsubscribe('newuser').then((data)=>{
+                              console.log("Unsubscribed to all");
+                            });
+                          });
+                          /*this.pushObject.unsubscribe('neworder').then((data)=>{
                             if(data!="OK"){
                               this.showPopup('Error unsubscribing to new orders','');
                             }
                           });
-                        });
-                        /*this.pushObject.unsubscribe('neworder').then((data)=>{
-                          if(data!="OK"){
-                            this.showPopup('Error unsubscribing to new orders','');
-                          }
-                        });
-                        this.pushObject.unsubscribe('newuser').then((data)=>{
-                          if(data!="OK"){
-                            this.showPopup('Error unsubscribing to new orders','');
-                          }
-                        });*/
-                      }
+                          this.pushObject.unsubscribe('newuser').then((data)=>{
+                            if(data!="OK"){
+                              this.showPopup('Error unsubscribing to new orders','');
+                            }
+                          });*/
+                        }
+                      });
                     }
                     else{
                       this.showPopup('Error Registering for notifications', err);
@@ -184,7 +193,7 @@ export class MyApp {
       });
       
   }
-  save_registration(reg_token){
+  save_registration(reg_token,callback){
     let platform = 'false';
     if(this.platform.is('ios')){
       platform = 'ios';
@@ -201,12 +210,13 @@ export class MyApp {
            
             this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/person_token/emailaddress/'+this.userprovider.user.emailaddress+'/token/'+this.userprovider.user.token,JSON.stringify({"notification":reg_token,"platform":platform}) , options)
             .subscribe(res => {
-               
+                 callback();
             });
              
     }
   }
   pushsetup(callback) {
+  console.log('push setup');
   const options: PushOptions = {
       android: {
           // senderID: '1066733044729',
@@ -226,7 +236,7 @@ export class MyApp {
       options.android.topics = ['neworder','newuser'];
       options.ios.topics = ['neworder','newuser'];
     }*/
-    this.pushObject = this.push.init(options);
+      this.pushObject = this.push.init(options);
   
     this.pushObject.on('notification').subscribe((notification: any) => {
       if(notification.additionalData.note_type =="New Order Received"){      
@@ -308,10 +318,12 @@ export class MyApp {
   
     this.pushObject.on('registration').subscribe((registration: any) => {
       //do whatever you want with the registration ID
+      console.log('registered correctly');
       callback(registration);
     });
     
     this.pushObject.on('error').subscribe(error =>{
+      console.log('error subrscribing');
       callback(false,error);
     });
     }

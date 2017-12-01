@@ -68,13 +68,19 @@ export class Order {
         if(element.notification && (element.platform =='android'||element.platform =='android')){
         let data_not = {
           "to": element.notification,
+          "priority" : "high",
           "data": {
             "message": "Orden Actualizada",
             "note_type":"Order Updated",
             "order_id":this.id,
             "emailaddress": element.emailaddress,
             "new_status":this.full_record.stage+1
-           }
+           },
+           "notification" : {
+            "body" : "Orden Actualizada",
+            "title" : "Orden Actualizada",
+            "icon" : "new"
+          }
           }
           if(estimated_time){
             data_not['data']['estimated_time']=estimated_time;

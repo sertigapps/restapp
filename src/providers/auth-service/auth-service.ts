@@ -30,10 +30,16 @@ export class AuthServiceProvider {
       let options_n = new RequestOptions({ headers: headers_n });
       let data_n = {
         "to": "/topics/newuser",
+        "priority" : "high",
         "data": {
           "message": "Nuevo Usuario",
           "note_type": "New User"
-         }
+         },
+         "notification" : {
+          "body" : "Nuevo Usuario",
+          "title" : "Nuevo Usuario",
+          "icon" : "new"
+        }
       };
       this.http.post('https://fcm.googleapis.com/fcm/send', JSON.stringify(data_n), options_n).map(res => res.json()).subscribe((a)=>{
         console.log('Admin Notified');
@@ -54,7 +60,7 @@ export class AuthServiceProvider {
     } else {
       credentials['app'] = 'La Barra App';
       let data = credentials;
-    return this.http.post('http://ec2-54-237-201-190.compute-1.amazonaws.com/upload/recover_request.php', JSON.stringify(data))
+    return this.http.post('http://34.195.122.172/upload/recover_request.php', JSON.stringify(data))
     .map(res => res.json());
     }
   }

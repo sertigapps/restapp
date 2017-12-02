@@ -65,7 +65,7 @@ export class Order {
       headers.append('Authorization', 'key=AAAA-F4-g_k:APA91bFxDbleSkpYhZvEuk5jsI3SHZkoblFBQNHVDEkAWK_a_ReKiiJ4_ogiHkzUsoSXtNxLRtvlkkzpNFuGG1zZ1p-u9bbSI-LzUOCy3DI4bGI-wLzAwIgoL8dWkd_JpwpG1ET_uM_V');
       let options = new RequestOptions({ headers: headers });
       data.forEach(element => {
-        if(element.notification && (element.platform =='android'||element.platform =='android')){
+        if(element.notification && (element.platform =='android'||element.platform =='ios')){
         let data_not = {
           "to": element.notification,
           "priority" : "high",

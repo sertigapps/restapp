@@ -37,7 +37,7 @@
                   </button>
               </ion-col>
               <ion-col (click)="showinfo(c)" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
-                  {{'ordered_by'|translation}} : {{c.emailaddress}}&nbsp;<button color="azul" ion-button small> <ion-icon ico item-right name="information-circle" ></ion-icon></button>
+                  {{'ordered_by'|translation}} : {{c.full_record.personname}}&nbsp; {{c.full_record.personlastname}}<button color="azul" ion-button small> <ion-icon ico item-right name="information-circle" ></ion-icon></button>
               </ion-col>
 
         </ion-row>

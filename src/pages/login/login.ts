@@ -148,7 +148,7 @@ export class LoginPage {
   console.log('push setup');
   const options: PushOptions = {
       android: {
-          // senderID: '1066733044729',
+          senderID: '1066733044729',
           sound:true,
           vibrate:true
       },

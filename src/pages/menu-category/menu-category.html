@@ -25,7 +25,7 @@
       <h4>{{c.full_record.description}}</h4>
       </button>
       <ion-list *ngIf="sections_open[c.id]"  >
-        <ion-item *ngFor="let it of sc_items[c.id]">
+        <ion-item *ngFor="let it of sc_items[c.id]" (click)="navCtrl.push('ShowItemPage',{'item':it})">
           <ion-thumbnail  *ngIf="it.full_record.images  && it.full_record.images[0]"  item-start>
             <img *ngIf="it.full_record.images[0]" src="{{it.full_record.images[0]}}">
           </ion-thumbnail>
@@ -38,7 +38,7 @@
             <ion-badge color="yellow">{{it.rate}}
               <ion-icon class="no_margin" icon-xs item-right name="star" ></ion-icon></ion-badge>
           </p>
-          <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
+          <button ion-button clear item-end>
             {{'order'|translation}}
             <ion-icon name="cart"></ion-icon></button>
         </ion-item>
@@ -52,7 +52,7 @@
       <h2>Other</h2>
       </button>
       <ion-list *ngIf="sections_open['other']">-->
-        <ion-item *ngFor="let it of items">
+        <ion-item *ngFor="let it of items" (click)="navCtrl.push('ShowItemPage',{'item':it})">
           <ion-thumbnail  *ngIf="it.full_record.images && it.full_record.images[0]"  item-start>
             <img *ngIf="it.full_record.images[0]" src="{{it.full_record.images[0]}}">
           </ion-thumbnail>
@@ -65,7 +65,7 @@
           <ion-badge color="yellow">{{it.rate}}
             <ion-icon class="no_margin" icon-xs item-right name="star" ></ion-icon></ion-badge>
         </p>
-          <button (click)="navCtrl.push('ShowItemPage',{'item':it})" ion-button clear item-end>
+          <button  ion-button clear item-end>
               {{'order'|translation}}
             <ion-icon name="cart"></ion-icon></button>
         </ion-item>

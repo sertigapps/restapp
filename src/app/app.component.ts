@@ -76,7 +76,7 @@ export class MyApp {
       console.log(this.url+'person/id/'+id);
       this.http.get(this.url+'person/id/'+id).map(res => res.json()).subscribe(res=>{
         loading.dismissAll();
-        if(res.errorMessage){
+        if(res && res.errorMessage){
           this.showPopup(res.errorMessage,'');
           if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify(false),false).
@@ -219,7 +219,7 @@ export class MyApp {
   console.log('push setup');
   const options: PushOptions = {
       android: {
-          // senderID: '1066733044729',
+           senderID: '1066733044729',
           sound:true,
           vibrate:true
       },

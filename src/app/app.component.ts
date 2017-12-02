@@ -192,12 +192,16 @@ export class MyApp {
           }
         }
         else{
-          this.pushObject.unsubscribe('neworder').then((data)=>{
-            this.pushObject.unsubscribe('newuser').then((data)=>{
-              console.log("Unsubscribed to all");
-            });
-          });
-          this.nav.setRoot ( 'LoginPage');
+          this.pushsetup((registration_id,err)=>{
+            if(registration_id){
+              this.pushObject.unsubscribe('neworder').then((data)=>{
+                this.pushObject.unsubscribe('newuser').then((data)=>{
+                  this.nav.setRoot ( 'LoginPage');
+                  console.log("Unsubscribed to all");
+                });
+              });
+            }
+          })
         }
       });
       

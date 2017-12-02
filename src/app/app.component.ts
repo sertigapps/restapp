@@ -76,120 +76,129 @@ export class MyApp {
       console.log(this.url+'person/id/'+id);
       this.http.get(this.url+'person/id/'+id).map(res => res.json()).subscribe(res=>{
         loading.dismissAll();
-        if(res && res.errorMessage){
-          this.showPopup(res.errorMessage,'');
-          if(this.platform.is('ios')){
-          this.keychain.set('sertig_token',JSON.stringify(false),false).
-          then(()=>console.log('Deleted Id and Token',''))
-          .catch(err=> console.log('Error deleting item IOS',err));
-              this.nav.setRoot ( 'LoginPage');
-          }
-          else{
-            this.nativeStorage.setItem('sertig_token',false)
-            .then(
-              ()=>console.log('Deleted Id and Token',''),
-              error => console.log('Error deleting item Other', error)
-            );
+        if(res){
+          if(res.errorMessage){
+            this.showPopup(res.errorMessage,'');
+            if(this.platform.is('ios')){
+            this.keychain.set('sertig_token',JSON.stringify(false),false).
+            then(()=>console.log('Deleted Id and Token',''))
+            .catch(err=> console.log('Error deleting item IOS',err));
                 this.nav.setRoot ( 'LoginPage');
-          }
-        }
-        else{
-          this.userprovider.logged_in(res.name,res.lastname,token,res.emailaddress,res);
-          this.http.get(this.url+'person_token/emailaddress/'+res.emailaddress+'/token/'+token).map(res => res.json()).subscribe(res=>{
-            if(res && res.errorMessage){
-              this.showPopup(res.errorMessage,'');
             }
             else{
-              if(!res || res.status_code !=1){
-                  if(this.platform.is('ios')){
-                    this.keychain.set('sertig_token',JSON.stringify(false),false).
-                    then(()=>console.log('Deleted Id and Token',''))
-                    .catch(err=> console.log('Error deleting item IOS',err));
-                        this.nav.setRoot ( 'LoginPage');
-                    }
-                    else{
-                      this.nativeStorage.setItem('sertig_token',false)
-                      .then(
-                        ()=>console.log('Deleted Id and Token',''),
-                        error => console.log('Error deleting item Other', error)
-                      );
-                          this.nav.setRoot ( 'LoginPage');
-                    }
-              }
+              this.nativeStorage.setItem('sertig_token',false)
+              .then(
+                ()=>console.log('Deleted Id and Token',''),
+                error => console.log('Error deleting item Other', error)
+              );
+                  this.nav.setRoot ( 'LoginPage');
             }
-          });
-          //this.nativeStorage.setItem('sertig_registration',false).then(()=>{
-          //push token
-                  this.pushsetup((registration_id,err)=>{
-                    if(registration_id){
-                      this.save_registration(registration_id.registrationId,()=>{
+          }
+          else{
+            this.userprovider.logged_in(res.name,res.lastname,token,res.emailaddress,res);
+            this.http.get(this.url+'person_token/emailaddress/'+res.emailaddress+'/token/'+token).map(res => res.json()).subscribe(res=>{
+              if(res && res.errorMessage){
+                this.showPopup(res.errorMessage,'');
+              }
+              else{
+                if(!res || res.status_code !=1){
+                    if(this.platform.is('ios')){
+                      this.keychain.set('sertig_token',JSON.stringify(false),false).
+                      then(()=>console.log('Deleted Id and Token',''))
+                      .catch(err=> console.log('Error deleting item IOS',err));
+                          this.nav.setRoot ( 'LoginPage');
+                      }
+                      else{
+                        this.nativeStorage.setItem('sertig_token',false)
+                        .then(
+                          ()=>console.log('Deleted Id and Token',''),
+                          error => console.log('Error deleting item Other', error)
+                        );
+                            this.nav.setRoot ( 'LoginPage');
+                      }
+                }
+              }
+            });
+            //this.nativeStorage.setItem('sertig_registration',false).then(()=>{
+            //push token
+                    this.pushsetup((registration_id,err)=>{
+                      if(registration_id){
+                        this.save_registration(registration_id.registrationId,()=>{
 
-                        if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
-                          this.pushObject.subscribe('neworder').then((data)=>{
-                            console.log('Subscribed to New Orders');
-                               this.pushObject.subscribe('newuser').then((data)=>{
+                          if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
+                            this.pushObject.subscribe('neworder').then((data)=>{
+                              console.log('Subscribed to New Orders');
+                                this.pushObject.subscribe('newuser').then((data)=>{
+                                  console.log('Subscribed to New users');
+                                },
+                                (e) => {
+                                  this.showPopup('Error subscribing to new orders','');
+                                  console.log('error:', e);
+                                });
+                            }
+                            ,(e) => {
+                              this.pushObject.subscribe('newuser').then((data)=>{
                                 console.log('Subscribed to New users');
                               },
                               (e) => {
                                 this.showPopup('Error subscribing to new orders','');
                                 console.log('error:', e);
                               });
-                          }
-                          ,(e) => {
-                            this.pushObject.subscribe('newuser').then((data)=>{
-                              console.log('Subscribed to New users');
-                            },
-                            (e) => {
                               this.showPopup('Error subscribing to new orders','');
                               console.log('error:', e);
                             });
-                            this.showPopup('Error subscribing to new orders','');
-                            console.log('error:', e);
-                          });
-                          
-                       /* this.pushObject.subscribe('neworder').then((data)=>{
-                            if(data!="OK"){
-                              this.showPopup('Error subscribing to new orders','');
-                            }
-                          });
-                          this.pushObject.subscribe('newuser').then((data)=>{
-                            if(data!="OK"){
-                              this.showPopup('Error subscribing to new orders','');
-                            }
-                          });*/
-                        }
-                        else{
-                          this.pushObject.unsubscribe('neworder').then((data)=>{
-                            this.pushObject.unsubscribe('newuser').then((data)=>{
-                              console.log("Unsubscribed to all");
+                            
+                        /* this.pushObject.subscribe('neworder').then((data)=>{
+                              if(data!="OK"){
+                                this.showPopup('Error subscribing to new orders','');
+                              }
                             });
-                          });
-                          /*this.pushObject.unsubscribe('neworder').then((data)=>{
-                            if(data!="OK"){
-                              this.showPopup('Error unsubscribing to new orders','');
-                            }
-                          });
-                          this.pushObject.unsubscribe('newuser').then((data)=>{
-                            if(data!="OK"){
-                              this.showPopup('Error unsubscribing to new orders','');
-                            }
-                          });*/
-                        }
-                      });
+                            this.pushObject.subscribe('newuser').then((data)=>{
+                              if(data!="OK"){
+                                this.showPopup('Error subscribing to new orders','');
+                              }
+                            });*/
+                          }
+                          else{
+                            this.pushObject.unsubscribe('neworder').then((data)=>{
+                              this.pushObject.unsubscribe('newuser').then((data)=>{
+                                console.log("Unsubscribed to all");
+                              });
+                            });
+                            /*this.pushObject.unsubscribe('neworder').then((data)=>{
+                              if(data!="OK"){
+                                this.showPopup('Error unsubscribing to new orders','');
+                              }
+                            });
+                            this.pushObject.unsubscribe('newuser').then((data)=>{
+                              if(data!="OK"){
+                                this.showPopup('Error unsubscribing to new orders','');
+                              }
+                            });*/
+                          }
+                        });
+                      }
+                      else{
+                        this.showPopup('Error Registering for notifications', err);
+                      }
+                    
+                    });
+                    if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
+                      this.cartprovider.fetch_new_orders();
                     }
-                    else{
-                      this.showPopup('Error Registering for notifications', err);
-                    }
-                   
-                  });
-                  if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
-                    this.cartprovider.fetch_new_orders();
-                  }
-                  this.cartprovider.fetch_my_orders(this.userprovider.user.emailaddress);
-                   this.nav.setRoot('HomePage');
-        //});//push token end
+                    this.cartprovider.fetch_my_orders(this.userprovider.user.emailaddress);
+                    this.nav.setRoot('HomePage');
+          //});//push token end
+          }
         }
-        
+        else{
+          this.pushObject.unsubscribe('neworder').then((data)=>{
+            this.pushObject.unsubscribe('newuser').then((data)=>{
+              console.log("Unsubscribed to all");
+            });
+          });
+          this.nav.setRoot ( 'LoginPage');
+        }
       });
       
   }

@@ -25,7 +25,7 @@ export class RegisterPage {
         this.createSuccess = true;
         this.showPopup(this.translate.transform('success'), this.translate.transform('account_created'));
       } else {
-        this.showPopup(res.errorMessage, this.translate.transform('problem_creating_account'));
+        this.showPopup(this.translate.transform(res.errorMessage), this.translate.transform('problem_creating_account'));
       }
     },
       error => {

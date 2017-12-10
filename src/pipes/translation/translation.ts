@@ -154,7 +154,7 @@ export class TranslationPipe implements PipeTransform {
     'recover_message':{'es':'Creando solicitud','en':'Sending Request'},
     'account_recover':{'es':'Solicitud enviada, recibira un correo con instrucciones para resetear la contraseña','en':'Request Sent. you will get an email with instructions to reset password'},
     'problem_recovering':{'es':'Problema al enviar solicitud','en':'Problem Sendind Request'},
-    'problem_creating_account':{'es':'Problemas Creado la Cuenta','en':'Problem Creating Account'},
+    'problem_creating_account':{'es':'Problemas Creando la Cuenta','en':'Problemss Creating Account'},
     'login_out':{'es':'Saliendo','en':'Login Out'},
     'update_profile':{'es':'Actualizar Perfil','en':'Update Profile'},
     'lastname':{'es':'Apellido','en':'Lastname'},

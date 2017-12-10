@@ -32,7 +32,7 @@ export class ModalCategoriePage {
     public viewCtrl: ViewController) {
     this.id = this.params.get('id');
     if(this.id===0){
-      this.category = new Category(0,'',{"id":0, "name":''},this.http);
+      this.category = new Category(0,'',{"id":0, "name":'','text_color':'#000'},this.http);
       this.title = "create_new_cat";
       this.title_button = "create";
     }

@@ -31,6 +31,17 @@
             <ion-item>
               <ion-textarea rows ="3" type="textarea" placeholder="{{'description'|translation}}" name="description" [(ngModel)]="category.full_record.description" ></ion-textarea>
             </ion-item>
+            <ion-item>
+              <ion-label>Color</ion-label>
+              <ion-select [(ngModel)]="category.full_record.text_color" name="text_color">
+                <ion-option value="#fff" >{{'white'|translation}}</ion-option>
+                <ion-option value="#000" >{{'black'|translation}}</ion-option>
+                <ion-option value="#bdbdbd">{{'gray'|translation}}</ion-option>
+                <ion-option value="#e13838">{{'red'|translation}}</ion-option>
+                <ion-option value="#ffff14">{{'yellow'|translation}}</ion-option>
+                <ion-option value="#EE9015">{{'orange'|translation}}</ion-option>
+              </ion-select>
+            </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>

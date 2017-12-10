@@ -188,6 +188,12 @@ export class TranslationPipe implements PipeTransform {
     'generate':{'es':'Generar','en':'Generate'},
     'start_date':{'es':'Fecha Inicial','en':'Start Date'},
     'end_date':{'es':'Fecha Final','en':'End Date'},
+    'white':{'es':'Blanco','en':'White'},
+    'black':{'es':'Negro','en':'Black'},
+    'gray':{'es':'Gris','en':'Gray'},
+    'red':{'es':'Rojo','en':'Red'},
+    'yellow':{'es':'Amarillo','en':'Yellow'},
+    'orange':{'es':'Anaranjado','en':'Orange'},
     'confirm_block_user':{'es':'Esta seguro de querer bloquear al usuario ?','en':'Are you sure you want to block the user ?'},
     'orders_disabled':{'es':'Lo sentimos, en este momento estamos cerrados!','en':'We are sorry, we are closed at this moment!'},
     'general_settings':{'es':'Configuracion','en':'Settings'}

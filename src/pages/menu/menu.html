@@ -25,10 +25,10 @@
     <ion-fab right bottom>
         <button (click)="see_top()" ion-fab color="yellow" ><ion-icon name="star"></ion-icon>TOP</button>
       </ion-fab>
-  <ion-card *ngFor="let c of menuprovider.categories" (click)="seecategory(c)">
+  <ion-card class="min_height_card" *ngFor="let c of menuprovider.categories" (click)="seecategory(c)">
    <img *ngIf="c.full_record.image_url" src="{{c.full_record.image_url}}"/>
-    <div class="card-title">{{c.name}}</div>
-    <div class="card-subtitle">{{c.full_record.description}}</div>
+    <div class="card-title" [ngStyle]="{'color': c.full_record.text_color}" >{{c.name}}</div>
+    <div class="card-subtitle" [ngStyle]="{'color': c.full_record.text_color}" >{{c.full_record.description}}</div>
 </ion-card>
 </ion-content>
 <ion-footer>

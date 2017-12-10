@@ -62,6 +62,6 @@ export class ContactUsPage {
     .catch(() => console.log('Error launching dialer'));
   }
   open_maps(){
-    this.launchNavigator.navigate([14.5281229,-90.6214151]);
+    this.launchNavigator.navigate([14.527914,-90.621788]);
   }
 }

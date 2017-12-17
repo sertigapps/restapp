@@ -21,6 +21,7 @@ import { CallNumber } from '@ionic-native/call-number';
 import { PipesModule } from "../pipes/pipes.module";
 import { TranslationPipe } from "../pipes/translation/translation";
 import { LaunchNavigator } from '@ionic-native/launch-navigator';
+import { ImageResizer } from '@ionic-native/image-resizer';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { LaunchNavigator } from '@ionic-native/launch-navigator';
     TranslationPipe,
     CallNumber,
     InAppBrowser,
+    ImageResizer,
     AppAvailability,
     File,
     Transfer,

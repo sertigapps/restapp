@@ -49,8 +49,7 @@
                     </button>
             </ion-col>
             </ion-row>
-          <ion-item *ngIf="item.full_record.menu_flag == 1">
-          <ion-row  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
+          <ion-row [hidden]="item.full_record.menu_flag != 1"  *ngFor="let c of item.full_record.included; let i = index;trackBy: customTrackBy" >
             
             <ion-col col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5>
               <ion-select class="myCustomSelect" required (ngModelChange)="update_options($event,i)" [(ngModel)]="item.full_record.included[i]" name="Included{{i}}"  cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
@@ -69,7 +68,6 @@
             </ion-col>
 
           </ion-row>
-        </ion-item>
           <ion-item>
               <ion-input type="text" placeholder="{{'label_type'|translation}}" name="label_type" [(ngModel)]="item.full_record.label_type" ></ion-input>
             </ion-item>
@@ -108,6 +106,23 @@
             <ion-select [(ngModel)]="item.full_record.visible" name="visibility" >
               <ion-option value="-1" >{{'no'|translation}}</ion-option>
               <ion-option value="1" >{{'yes'|translation}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{'offer'|translation}}</ion-label>
+          <ion-checkbox name="offerflag" [(ngModel)]="item.full_record.offer"></ion-checkbox>
+        </ion-item>
+        <ion-item *ngIf="item.full_record.offer">
+          <ion-label>{{'days'|translation}}</ion-label>
+          <ion-select [(ngModel)]="item.full_record.days" name="daysoffer" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+              
+              <ion-option  value="0" >{{'sunday'|translation}}</ion-option>
+              <ion-option  value="1" >{{'monday'|translation}}</ion-option>
+              <ion-option  value="2" >{{'tuesday'|translation}}</ion-option>
+              <ion-option  value="3" >{{'wedenesday'|translation}}</ion-option>
+              <ion-option  value="4" >{{'thursday'|translation}}</ion-option>
+              <ion-option  value="5" >{{'friday'|translation}}</ion-option>
+              <ion-option  value="6" >{{'saturday'|translation}}</ion-option>
             </ion-select>
         </ion-item>
             <ion-item>

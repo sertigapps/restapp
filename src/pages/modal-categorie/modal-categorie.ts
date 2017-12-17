@@ -9,6 +9,8 @@ import { UserProvider } from '../../providers/user/user';
 import { Http,RequestOptions,Headers} from '@angular/http';
 import { MenuProvider } from '../../providers/menu/menu';
 import { TranslationPipe } from "../../pipes/translation/translation";
+import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer';
+
 declare var cordova: any;
 
 @IonicPage()
@@ -25,7 +27,7 @@ export class ModalCategoriePage {
   image_uploaded: string = null;
   public title_button : string;
   public category :  Category;
-  constructor(  public translate : TranslationPipe,public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,
+  constructor(  public translate : TranslationPipe,private imageResizer: ImageResizer,public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,
     private transfer: Transfer,
     public params: NavParams, public actionSheetCtrl: ActionSheetController,  private filePath: FilePath,
     public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController, private file: File,
@@ -172,59 +174,75 @@ public uploadImage() {
   var url = "http://34.195.122.172/upload/upload_image.php";
  
   // File for Upload
-  var targetPath = this.pathForImage(this.lastImage);
- 
-  // File name only
-  var filename = this.lastImage;
- 
-  var options = {
-    fileKey: "file",
-    fileName: this.userprovider.emailaddress.replace('@','_-_')+ filename,
-    chunkedMode: false,
-    mimeType: "multipart/form-data",
-    params : {
-      'fileName': this.userprovider.emailaddress.replace('@','_-_')+ filename,
-      'sertig_email': this.userprovider.emailaddress,
-      'sertig_token': this.userprovider.token,
-      'sertig_app': "labarraapp"
-  }
-  };
- 
-  const fileTransfer: TransferObject = this.transfer.create();
- 
-  this.loading = this.loadingCtrl.create({
-    content: this.translate.transform('uploading')+' ....',
-  });
-  this.loading.present();
- 
-  // Use the FileTransfer to upload the image
-  fileTransfer.upload(targetPath, url, options).then(data => {
-    this.loading.dismissAll();
-    var data_res= JSON.parse(data['response']);
-    if(data_res.error){
-      this.presentToast(data_res.message);
-      
+  var targetPathBefore = this.pathForImage(this.lastImage);
+  let options_mage = {
+    uri: targetPathBefore,
+    //folderName: 'Protonet',
+    quality: 90,
+    width: 1600,
+    height: 1200,
+    fileName: 'resizedimage.jpg' 
+   } as ImageResizerOptions;
+  
+   this.imageResizer
+   .resize(options_mage)
+   .then((targetPath: string) => {
+
+   
+
+    // File name only
+    var filename = this.lastImage;
+  
+    var options = {
+      fileKey: "file",
+      fileName: this.userprovider.emailaddress.replace('@','_-_')+ filename,
+      chunkedMode: false,
+      mimeType: "multipart/form-data",
+      params : {
+        'fileName': this.userprovider.emailaddress.replace('@','_-_')+ filename,
+        'sertig_email': this.userprovider.emailaddress,
+        'sertig_token': this.userprovider.token,
+        'sertig_app': "labarraapp"
     }
-    if(this.category.full_record.image_url && this.category.full_record.image_url!=''){
-      let headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      let options = new RequestOptions({ headers: headers });
-      headers.append('sertig_token',this.userprovider.token.toString());
-      headers.append('sertig_email',this.userprovider.emailaddress.toString());
-      
-      let data = {item:this.category.full_record.image_url.split('/').pop(),appid:'labarraapp'};
-      
-    this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/deleteimage', JSON.stringify(data), options).map(res => res.json()).subscribe((data)=>{
-    console.log('imagedeleted');
+    };
+  
+    const fileTransfer: TransferObject = this.transfer.create();
+  
+    this.loading = this.loadingCtrl.create({
+      content: this.translate.transform('uploading')+' ....',
     });
-    }
-    this.image_uploaded = this.pathForImageShow(this.lastImage);
-    this.category.full_record.image_url = this.image_uploaded;
-  }, err => {
-    console.log(err);
-    this.loading.dismissAll()
-    this.presentToast(this.translate.transform('error_uploading'));
-  });
+    this.loading.present();
+    
+    // Use the FileTransfer to upload the image
+    fileTransfer.upload(targetPath, url, options).then(data => {
+      this.loading.dismissAll();
+      var data_res= JSON.parse(data['response']);
+      if(data_res.error){
+        this.presentToast(data_res.message);
+        
+      }
+      if(this.category.full_record.image_url && this.category.full_record.image_url!=''){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+        headers.append('sertig_token',this.userprovider.token.toString());
+        headers.append('sertig_email',this.userprovider.emailaddress.toString());
+        
+        let data = {item:this.category.full_record.image_url.split('/').pop(),appid:'labarraapp'};
+        
+      this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/deleteimage', JSON.stringify(data), options).map(res => res.json()).subscribe((data)=>{
+      console.log('imagedeleted');
+      });
+      }
+      this.image_uploaded = this.pathForImageShow(this.lastImage);
+      this.category.full_record.image_url = this.image_uploaded;
+    }, err => {
+      console.log(err);
+      this.loading.dismissAll()
+      this.presentToast(this.translate.transform('error_uploading'));
+    });
+  })
+  .catch(e => console.log('Error resizing',e));
 }
 
 }

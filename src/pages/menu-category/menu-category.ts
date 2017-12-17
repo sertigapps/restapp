@@ -50,7 +50,14 @@ export class MenuCategoryPage {
       }
       this.item_ids[item.id]=true;
       return true;
-    }))
+    }));
+    this.sc_items[sc.id] = this.sc_items[sc.id].filter((item)=>{
+          var valid = true;
+          if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+            valid = false;
+          }
+          return valid;  
+    });
     this.sc_items[sc.id].sort((a,b)=>{
       return a.full_record.order - b.full_record.order;
     });
@@ -61,6 +68,13 @@ export class MenuCategoryPage {
   this.items= this.items.concat( this.menuprovider.menus.filter((item)=>{
     return   item.category_id == this.category.id && !this.item_ids[item.id] && (!item.full_record.visible || item.full_record.visible==1) ;
   }));
+  this.items = this.items.filter((item)=>{
+        var valid = true;
+        if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+          valid = false;
+        }
+        return valid;  
+  });
   this.items.sort((a,b)=>{
     return a.full_record.order - b.full_record.order;
   });

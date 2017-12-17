@@ -33,6 +33,7 @@
           <p>{{it.full_record.description}}</p>
           <p>
             <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+            <ion-badge color="yellow" *ngIf="it.full_record.offer" >{{'offer'|translation}}</ion-badge>
           </p>
           <p  *ngIf="it.rate >0" >
             <ion-badge color="yellow">{{it.rate}}
@@ -60,6 +61,7 @@
           <p>{{it.full_record.description}}</p>
           <p>
           <ion-badge color="azul" *ngIf="it.full_record.menu_flag && it.full_record.menu_flag == 1" >{{'menu'|translation}}</ion-badge>
+          <ion-badge color="yellow" *ngIf="it.full_record.offer" >{{'offer'|translation}}</ion-badge>
         </p>
         <p  *ngIf="it.rate >0" >
           <ion-badge color="yellow">{{it.rate}}

@@ -9,6 +9,7 @@ import { UserProvider } from '../../providers/user/user';
 import { Http,Headers,RequestOptions} from '@angular/http';
 import { MenuProvider } from '../../providers/menu/menu';
 import { TranslationPipe } from "../../pipes/translation/translation";
+import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer';
 declare var cordova: any;
 
 @IonicPage()
@@ -25,7 +26,7 @@ export class ModalIngredientPage {
   image_uploaded: string = null;
   public title_button : string;
   public ingredient :  Ingredient;
-  constructor(public translate : TranslationPipe,  public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,private transfer: Transfer,
+  constructor(public translate : TranslationPipe, private imageResizer: ImageResizer, public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,private transfer: Transfer,
     public params: NavParams, public actionSheetCtrl: ActionSheetController,  private filePath: FilePath,
     public toastCtrl: ToastController, public platform: Platform, public loadingCtrl: LoadingController, private file: File,
     public viewCtrl: ViewController) {
@@ -170,9 +171,20 @@ public pathForImageShow(img) {
 public uploadImage() {
   // Destination URL
   var url = "http://34.195.122.172/upload/upload_image.php";
+ // File for Upload
+ var targetPathBefore = this.pathForImage(this.lastImage);
+ let options_mage = {
+   uri: targetPathBefore,
+   //folderName: 'Protonet',
+   quality: 90,
+   width: 1600,
+   height: 1200,
+   fileName: 'resizedimage.jpg' 
+  } as ImageResizerOptions;
  
-  // File for Upload
-  var targetPath = this.pathForImage(this.lastImage);
+  this.imageResizer
+  .resize(options_mage)
+  .then((targetPath: string) => {
  
   // File name only
   var filename = this.lastImage;
@@ -223,6 +235,8 @@ public uploadImage() {
     this.loading.dismissAll()
     this.presentToast(this.translate.transform('error_uploading'));
   });
+})
+.catch(e => console.log('Error resizing',e));
 }
 
 }

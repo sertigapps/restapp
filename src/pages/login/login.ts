@@ -177,7 +177,8 @@ export class LoginPage {
             {
               text: 'OK',
               handler: data => {
-                let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."})
+                let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."});
+                loading.present();
                 this.cartprovider.fetch_more_orders().subscribe(data=>{
                   data.forEach(c=>{
                       this.cartprovider.orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
@@ -197,7 +198,8 @@ export class LoginPage {
         alert.present();
       }, 500);
     }
-    if(notification.additionalData.note_type =="Order Updated"){    
+    if(notification.additionalData.note_type =="Order Updated"){
+      this.cartprovider.refresh_my_orders(this.userprovider.emailaddress);    
       let alert = this.alertCtrl.create({
         title: this.translate.transform("order_updated"),
         buttons: [

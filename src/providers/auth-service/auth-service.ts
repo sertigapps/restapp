@@ -60,7 +60,7 @@ export class AuthServiceProvider {
     } else {
       credentials['app'] = 'La Barra App';
       let data = credentials;
-    return this.http.post('http://34.195.122.172/upload/recover_request.php', JSON.stringify(data))
+    return this.http.post('http://www.sertigapps.com/upload/recover_request.php', JSON.stringify(data))
     .map(res => res.json());
     }
   }

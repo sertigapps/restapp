@@ -146,6 +146,7 @@ advance(order){
 }
 refresh_orders(){
   let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."});
+  loading.present();
   this.cartprovider.fetch_more_orders().subscribe(data=>{
     data.forEach(c=>{
         this.cartprovider.orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));

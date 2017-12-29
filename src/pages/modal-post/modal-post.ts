@@ -171,7 +171,7 @@ public pathForImageShow(img) {
 }
 public uploadImage() {
   // Destination URL
-  var url = "http://34.195.122.172/upload/upload_image.php";
+  var url = "http://www.sertigapps.com/upload/upload_image.php";
  
   // File for Upload
  var targetPathBefore = this.pathForImage(this.lastImage);

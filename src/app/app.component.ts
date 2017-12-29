@@ -93,6 +93,16 @@ export class MyApp {
               );
                   this.nav.setRoot ( 'LoginPage');
             }
+            this.pushObject.unsubscribe('neworder').then((data)=>{
+              this.pushObject.unsubscribe('newuser').then((data)=>{
+                this.pushObject.unregister().then(
+                  ()=>{
+                  console.log('Unsubscribed from push','');
+                  },
+                  (e)=>{console.log("error-",e)}
+                );
+              });
+            });
           }
           else{
             this.userprovider.logged_in(res.name,res.lastname,token,res.emailaddress,res);
@@ -116,6 +126,16 @@ export class MyApp {
                         );
                             this.nav.setRoot ( 'LoginPage');
                       }
+                      this.pushObject.unsubscribe('neworder').then((data)=>{
+                        this.pushObject.unsubscribe('newuser').then((data)=>{
+                          this.pushObject.unregister().then(
+                            ()=>{
+                            console.log('Unsubscribed from push','');
+                            },
+                            (e)=>{console.log("error-",e)}
+                          );
+                        });
+                      });
                 }
               }
             });
@@ -232,7 +252,7 @@ export class MyApp {
   console.log('push setup');
   const options: PushOptions = {
       android: {
-           senderID: '1066733044729',
+          //  senderID: '1066733044729',
           sound:true,
           vibrate:true
       },
@@ -261,6 +281,7 @@ export class MyApp {
                 text: 'OK',
                 handler: data => {
                   let loading = this.loadingCtrl.create({content : this.translate.transform("loading_order")+ ".."});
+                  loading.present();
                   this.cartprovider.fetch_more_orders().subscribe(data=>{
                     data.forEach(c=>{
                         this.cartprovider.orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
@@ -280,7 +301,8 @@ export class MyApp {
           alert.present();
         }, 500);
       }
-      if(notification.additionalData.note_type =="Order Updated"){    
+      if(notification.additionalData.note_type =="Order Updated"){ 
+        this.cartprovider.refresh_my_orders(this.userprovider.emailaddress);   
         let alert = this.alertCtrl.create({
           title: this.translate.transform("order_updated"),
           buttons: [
@@ -306,6 +328,7 @@ export class MyApp {
                   this.cartprovider.update_counters();
                   });
                 }
+                this.cartprovider.refresh_my_orders(this.userprovider.emailaddress);
                 this.cartprovider.update_counters();
               }
             }
@@ -345,9 +368,12 @@ export class MyApp {
   }
   logout() {
     //this.showPopup(this.userprovider.emailaddress,this.userprovider.token);
-      let loading = this.loadingCtrl.create({content : this.translate.transform("login_out")+ ".."});
+    let loading = this.loadingCtrl.create({content : this.translate.transform("login_out")+ ".."});
+    loading.present();
     this.authservice.logout(this.userprovider.emailaddress,this.userprovider.token).subscribe(res => {
-      loading.dismissAll();
+      
+
+      console.log('Logout succesfully');
       if(!res.errorMessage){
         if(this.platform.is('ios')){
           this.keychain.set('sertig_token',JSON.stringify(false),false).
@@ -361,10 +387,21 @@ export class MyApp {
             error => console.log('Error deleting item Other', error)
           );  
         }
-        this.pushObject.unregister().then(()=>{
-          console.log('Unsubscribed from push','');
-        });
+
+        console.log('in here',this.pushObject);
+        loading.dismissAll();
         this.nav.setRoot ( 'LoginPage');
+        this.pushObject.unsubscribe('neworder').then((data)=>{
+          this.pushObject.unsubscribe('newuser').then((data)=>{
+            this.pushObject.unregister().then(
+              ()=>{
+              console.log('Unsubscribed from push','');
+              },
+              (e)=>{console.log("error-",e)}
+            );
+          });
+        });
+        
       }
       else{
         this.showPopup(res.errorMessage,'');

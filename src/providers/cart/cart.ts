@@ -77,6 +77,8 @@ export class CartProvider {
     this.my_new_orders = this.myorders.filter((o)=>{return o.full_record.stage < 4 }).length;
   }
   fetch_new_orders(){
+    this.new_orders = 0;
+    this.orders = [];
     this.last_loaded = (new Date()).getTime();
     this.http.get(this.url+'query/order/status_code/1/EQ/create_date/0/GT')
     .map(res => res.json()).subscribe(data=>{

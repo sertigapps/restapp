@@ -73,6 +73,9 @@ export class ShowItemPage {
     this.disabled_types = true;
     this.current_total = parseInt(price);
   }
+  if(this.item.full_record.offer && this.item.full_record.offer =="1"){
+    this.disabled_types = true;
+  }
   var label= this.navParams.get('label');
   if(label && !this.item.full_record.menu_flag && this.item.full_record.menu_flag !=1 ){
     this.type_selected = label;

@@ -1,13 +1,13 @@
 <ion-menu id="sidenav" [content]="content">
     <ion-header>
   <ion-toolbar>
-      <ion-item class="backg_black" *ngIf="userprovider && userprovider.user">
+      <ion-item class="backg_black" (click)="showmodalprofile()" *ngIf="userprovider && userprovider.user">
           <ion-avatar *ngIf="userprovider.user.full_record.image_url" item-start>
             <img src="{{userprovider.user.full_record.image_url}}">
           </ion-avatar>
           <h2>{{userprovider.user.full_record.name}} {{userprovider.user.full_record.lastname}}</h2>
           <h3>{{userprovider.user.emailaddress}}</h3>
-          <ion-icon item-end class="icon-yellow" (click)="showmodalprofile()" name='switch'></ion-icon>
+          <ion-icon item-end class="icon-yellow"  name='switch'></ion-icon>
         </ion-item>
   </ion-toolbar>
   </ion-header>

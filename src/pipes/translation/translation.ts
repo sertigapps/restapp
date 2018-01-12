@@ -182,6 +182,8 @@ export class TranslationPipe implements PipeTransform {
     'order_not_created':{'es':'Orden no creada','en':'Order not created'},
     'rate':{'es':'Calificar','en':'Rate'},
     'january':{'es':'Enero','en':'January'},
+    'error_password':{'es':'Las contraseñas no coinciden','en':'Passwords do not match'},
+    'new_pass_conf':{'es':'Confirmar Password','en':'Confirm Password'},
     'february':{'es':'Febrero','en':'February'},
     'march':{'es':'Marzo','en':'March'},
     'april':{'es':'Abril','en':'April'},

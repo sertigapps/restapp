@@ -95,10 +95,11 @@ export class ShowItemPage {
     this.extras_item ={};
     this.extras_item_added = {};
     this.item.full_record.included.forEach((i,index)=>{
-      var item_included = this.menuprovider.getitem(i);
+      var item_included = this.menuprovider.getitem(i,index.toString());
+      
       this.item_type[item_included.id] = item_included.full_record.price_label;
       this.item_type_selected[item_included.id] = this.item.full_record.included_types[index];
-      this.ingredients_menu.push(i);
+      this.ingredients_menu.push(item_included.id+','+i.split(',')[1]);
       this.ingredients_item_included[item_included.id] = {};
       this.ingredients_item_selected[item_included.id] = [];
       this.extras_item[item_included.id] = [];
@@ -243,9 +244,11 @@ qty_change(qty){
                 order['no'] = [];
                 order['extra'] = [];
                 if(this.item.full_record.menu_flag && this.item.full_record.menu_flag==1){
-                  this.item.full_record.included.forEach(element => {
+                  let contador = 0;
+                  this.item.full_record.included.forEach((element,i) => {
                         
-                        var current_item = this.menuprovider.getitem(element);
+                        var current_item = this.menuprovider.getitem(element,contador.toString());
+                        element = current_item.id;
                         var title = current_item.name;
                         if(current_item.full_record.price_label.length >1){
                           title = current_item.name + ' - ' +this.item_type_selected[element.split(',')[0]];
@@ -267,6 +270,7 @@ qty_change(qty){
                         order['no'].push( no);
                         order['title'].push( title);
                         order['extra'].push(extra);
+                        contador++;
                   });
                 }
                 else{

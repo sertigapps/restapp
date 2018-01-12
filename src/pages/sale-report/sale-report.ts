@@ -57,14 +57,14 @@ export class SaleReportPage {
           this.report_orders.forEach((o)=>{
             if(!this.report_objects[o.full_record.item_id]){
               this.report_indexes[o.full_record.item_id] = o.full_record.item_name;
-              this.report_objects[o.full_record.item_id] = {'qty':o.full_record.quantity,'total':o.full_record.total};
+              this.report_objects[o.full_record.item_id] = {'qty':parseInt(o.full_record.quantity),'total':o.full_record.total};
             }
             else{
-              this.report_objects[o.full_record.item_id] = {'qty':this.report_objects[o.full_record.item_id]['qty']+o.full_record.quantity,
+              this.report_objects[o.full_record.item_id] = {'qty':parseInt(this.report_objects[o.full_record.item_id]['qty'])+parseInt(o.full_record.quantity),
                   'total':this.report_objects[o.full_record.item_id]['total']+o.full_record.total};
             }
             this.total +=o.full_record.total;
-            this.qty_total +=o.full_record.quantity;
+            this.qty_total +=parseInt(o.full_record.quantity);
           });
           this.index_array = Object.keys(this.report_indexes);
           this.report_type = "byitem";

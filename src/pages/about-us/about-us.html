@@ -14,14 +14,19 @@
 
 
 <ion-content padding>
-    <ion-card >
-      <ion-card-header text-center>Cevicheria La Barra</ion-card-header>
-        <img  src="/assets/img/icon.png"/>
+    <ion-card  *ngIf="loading_spinner" >
+        <ion-card-header>
+          {{'loading'|translation}} ....
+        </ion-card-header>
+      </ion-card>
+      <ion-card text-center  *ngIf="!loading_spinner" >
+      <ion-card-header text-center>{{store_name}}</ion-card-header>
+        <ion-img width="160" height="160" src="{{image_url}}"></ion-img>
         <ion-card-content>
-          <ion-card-title>{{'about_us_title' | translation}}
+          <ion-card-title>{{about_us_title}}
             </ion-card-title>
           <p>
-              {{'about_us_text' | translation}}
+              {{about_us_text}}
           </p>
           
         </ion-card-content>

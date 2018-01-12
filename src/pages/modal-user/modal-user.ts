@@ -19,6 +19,7 @@ declare var cordova: any;
 export class ModalUserPage {
   public id : number;
   public title : string;
+  public password_conf :string;
   public image_base : string ="https://s3.amazonaws.com/sertigs3/labarraapp/";
   loading: Loading;
   lastImage: string = null;
@@ -46,6 +47,11 @@ export class ModalUserPage {
     this.viewCtrl.dismiss();
   }
   submit(){
+    if(this.user.full_record.password!="" && this.user.full_record.password != this.password_conf){
+      this.presentToast(this.translate.transform('error_password'));
+
+    }
+    else{
      this.loading = this.loadingCtrl.create({
     content: this.translate.transform('saving')+' '+this.translate.transform('profile'),
   });
@@ -63,6 +69,7 @@ export class ModalUserPage {
         this.loading.dismissAll();
         this.presentToast(this.translate.transform('error_on_req'));
       });
+    };
   }
   public presentActionSheet() {
     let actionSheet = this.actionSheetCtrl.create({

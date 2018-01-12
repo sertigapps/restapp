@@ -75,17 +75,19 @@ export class MenuProvider {
       return a.full_record.order -b.full_record.order;
     })
   }
-  getitem(id_name){
+  getitem(id_name,splitted?){
     var to_return : Item;
     var id = id_name.split(',')[0];
     this.items.forEach((i)=>{
       if(i.id==id){
-        to_return = new Item(i.id,i.category_id,i.name,i.full_record,this.http);
+        let id_new = (splitted)?i.id+splitted.toString():i.id;
+        to_return = new Item(id_new,i.category_id,i.name,i.full_record,this.http);
       }
     });
     this.menus.forEach((i)=>{
       if(i.id==id){
-        to_return = new Item(i.id,i.category_id,i.name,i.full_record,this.http);
+        let id_new = (splitted)?i.id+splitted.toString():i.id;
+        to_return = new Item(id_new,i.category_id,i.name,i.full_record,this.http);
       }
     });
     return to_return;

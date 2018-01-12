@@ -45,6 +45,11 @@ export class UserProvider {
     return this.http.get(this.url+'/atomic_id/table/store_availability')
     .map(res => res.json())
   }
+  get_store_about_us(){
+    this.newusers = [];
+    return this.http.get(this.url+'/atomic_id/table/store_about_us')
+    .map(res => res.json())
+  }
   switch_order_availability(value){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');

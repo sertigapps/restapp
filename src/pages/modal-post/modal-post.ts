@@ -55,6 +55,9 @@ export class ModalPostPage {
     this.viewCtrl.dismiss();
   }
   submit(){
+    if(this.post.full_record.offer===true){
+      this.post.full_record.offer = 1;
+    }
      this.loading = this.loadingCtrl.create({
     content:  this.translate.transform('saving')+' '+this.translate.transform('post'),
   });

@@ -46,6 +46,23 @@
                 <ion-label>{{'price_sale'|translation}}</ion-label>
                 <ion-input type="number" placeholder="{{'price'|translation}}" name="price" [(ngModel)]="post.full_record.price_sale" ></ion-input>
             </ion-item>
+            <ion-item>
+              <ion-label>{{'offer'|translation}}</ion-label>
+              <ion-checkbox name="offerflag" [(ngModel)]="post.full_record.offer"></ion-checkbox>
+            </ion-item>
+            <ion-item *ngIf="post.full_record.offer">
+              <ion-label>{{'days'|translation}}</ion-label>
+              <ion-select [(ngModel)]="post.full_record.days" name="daysoffer" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
+                  
+                  <ion-option  value="0" >{{'sunday'|translation}}</ion-option>
+                  <ion-option  value="1" >{{'monday'|translation}}</ion-option>
+                  <ion-option  value="2" >{{'tuesday'|translation}}</ion-option>
+                  <ion-option  value="3" >{{'wedenesday'|translation}}</ion-option>
+                  <ion-option  value="4" >{{'thursday'|translation}}</ion-option>
+                  <ion-option  value="5" >{{'friday'|translation}}</ion-option>
+                  <ion-option  value="6" >{{'saturday'|translation}}</ion-option>
+                </ion-select>
+            </ion-item>
             
           </ion-list>
         </ion-col>

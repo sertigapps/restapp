@@ -55,6 +55,13 @@ export class MenuProvider {
       data.forEach(c=>{
         this.posts.push(new Post(c.id,c.title,c,this.http));
       });
+      this.posts = this.posts.filter(function(item){
+        var valid = true;
+        if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+          valid = false;
+        }
+        return valid; 
+      });
       this.posts.sort((a,b)=>{
         return a.full_record.create_date - b.full_record.create_date;
       })

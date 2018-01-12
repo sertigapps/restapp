@@ -13,6 +13,7 @@ import { CartProvider } from '../../providers/cart/cart';
 })
 export class HomePage {
   public user:User;
+  public posts_valid:any;
   lastImage: string = null;
   loading: Loading;
   constructor(  public cartprovider:CartProvider,public userprovider:UserProvider,public menuprovider:MenuProvider, public navCtrl: NavController,private menu: MenuController,  
@@ -23,6 +24,13 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
+    this.menuprovider.posts = this.menuprovider.posts.filter(function(item){
+      var valid = true;
+      if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+        valid = false;
+      }
+      return valid; 
+    });
     console.log('ionViewDidLoad HomePage');
   }
   

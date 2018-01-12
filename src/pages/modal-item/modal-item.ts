@@ -108,6 +108,9 @@ remove_image(index){
   this.item.full_record.images.splice(index,1);
 }
   submit(){
+    if(this.item.full_record.offer===true){
+      this.item.full_record.offer = 1;
+    }
      this.loading = this.loadingCtrl.create({
     content: this.translate.transform('saving')+' '+this.translate.transform('item'),
   });

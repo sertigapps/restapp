@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http,RequestOptions,Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { User } from '../../app/models/User' ;
+import { User } from '../../app/models/user' ;
 
 /*
   Generated class for the UserProvider provider.

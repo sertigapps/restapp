@@ -16,6 +16,7 @@ export class TranslationPipe implements PipeTransform {
   translations:Object={
     'home':{'es':'Inicio','en':'Home'},
     'approve_users':{'es':'Aprobar Usuarios','en':'Approve Users'},
+    'invalid_email':{'es':'Correo Electronico Invalido','en':'Invalid Email'},
     'about_us':{'es':'Quienes Somos','en':'About Us'},
     'contact_us':{'es':'Contactanos','en':'Contact Us'},
     'log_out':{'es':'Salir','en':'Log out'},

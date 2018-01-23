@@ -36,6 +36,13 @@ export class LoginPage {
   }
  
   public login() {
+    let regExp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    
+        if (!regExp.test(this.registerCredentials.emailaddress)) {
+          
+        this.showPopup(this.translate.transform('invalid_email'), this.translate.transform("access_denied"));
+          return ;
+        }
     let loading = this.loadingCtrl.create({content : this.translate.transform('login_message')});
     loading.present();
     this.auth.login(this.registerCredentials).subscribe(res => {

@@ -4,6 +4,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AppAvailability } from '@ionic-native/app-availability';
 import { CallNumber } from '@ionic-native/call-number';
 import { LaunchNavigator } from '@ionic-native/launch-navigator';
+import { UserProvider } from '../../providers/user/user';
 
 /**
  * Generated class for the ContactUsPage page.
@@ -18,13 +19,14 @@ import { LaunchNavigator } from '@ionic-native/launch-navigator';
   templateUrl: 'contact-us.html',
 })
 export class ContactUsPage {
-
-  constructor(private callNumber: CallNumber,public apavail:AppAvailability,public platform: Platform,public navCtrl: NavController,private iab: InAppBrowser, 
+  public storesettings :any;
+  constructor(public userprovider:UserProvider,private callNumber: CallNumber,public apavail:AppAvailability,public platform: Platform,public navCtrl: NavController,private iab: InAppBrowser, 
     public navParams: NavParams,private launchNavigator: LaunchNavigator) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ContactUsPage');
+    this.storesettings = this.userprovider.get_store_info();
   }
 
   launchExternalApp(iosSchemaName: string, androidPackageName: string, appUrl: string, httpUrl: string, username: string) {
@@ -57,11 +59,11 @@ export class ContactUsPage {
       this.launchExternalApp('instagram://', 'com.instagram.android', 'instagram://user?username=', 'https://www.instagram.com/', 'cevichelerialabarra');
   }
   call(){
-    this.callNumber.callNumber("50259089", true)
+    this.callNumber.callNumber(this.storesettings.phonenumber, true)
     .then(() => console.log('Launched dialer!'))
     .catch(() => console.log('Error launching dialer'));
   }
   open_maps(){
-    this.launchNavigator.navigate([14.527914,-90.621788]);
+    this.launchNavigator.navigate([this.storesettings.lat,this.storesettings.long]);
   }
 }

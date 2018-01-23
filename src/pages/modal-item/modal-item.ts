@@ -29,6 +29,7 @@ export class ModalItemPage {
   image_uploaded: string = null;
   public title_button : string;
   public item :  Item;
+  offercheck:boolean;
   public subcategories: Array<SubCategory> = []
   constructor( public translate : TranslationPipe,private imageResizer: ImageResizer, public http: Http,public menuprovider:MenuProvider,public userprovider:UserProvider,private camera: Camera,private transfer: Transfer,
     public params: NavParams, public actionSheetCtrl: ActionSheetController,  private filePath: FilePath,
@@ -54,6 +55,10 @@ export class ModalItemPage {
       }
       if(this.item.full_record.image_url){
         this.image_uploaded = this.item.full_record.image_url;
+      }
+      this.offercheck = false;
+      if(this.item.full_record.offer==1){
+        this.offercheck = true;
       }
       this.title_button = "save";
       this.title = "update_item";
@@ -107,9 +112,17 @@ remove_image(index){
   }
   this.item.full_record.images.splice(index,1);
 }
+switchOffer(){if(this.offercheck===true){
+  this.item.full_record.offer = 1;
+}else{
+  this.item.full_record.offer = -1;
+}
+}
   submit(){
     if(this.item.full_record.offer===true){
       this.item.full_record.offer = 1;
+    }else{
+      this.item.full_record.offer = -1;
     }
      this.loading = this.loadingCtrl.create({
     content: this.translate.transform('saving')+' '+this.translate.transform('item'),

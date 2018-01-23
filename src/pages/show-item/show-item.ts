@@ -73,7 +73,7 @@ export class ShowItemPage {
     this.disabled_types = true;
     this.current_total = parseInt(price);
   }
-  if(this.item.full_record.offer && this.item.full_record.offer =="1"){
+  if(this.item.full_record.offer && this.item.full_record.offer ==1){
     this.disabled_types = true;
   }
   var label= this.navParams.get('label');
@@ -118,7 +118,9 @@ export class ShowItemPage {
   }
 }
 qty_change(qty){
-  
+  if(!this.current_total){
+    this.current_total = 0;
+  }
   this.total = this.current_total * qty;
   this.extra_total = 0;
   Object.keys(this.extra_price).forEach((i)=>{

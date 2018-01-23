@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http,RequestOptions,Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { User } from '../../app/models/user' ;
+import { User } from '../../app/models/User' ;
 
 /*
   Generated class for the UserProvider provider.
@@ -17,6 +17,7 @@ export class UserProvider {
   public token:String;
   public language:any;
   public emailaddress:String;
+  public storesettings:any;
   constructor(public http: Http) {
     console.log('Hello UserProvider Provider');
     //this.load_new_users();
@@ -30,6 +31,9 @@ export class UserProvider {
     }
     full.password = '';
     this.user = new User(name,lastname,token,emailaddress,full,this.http);
+    this.get_store_about_us().subscribe((data)=>{
+      this.storesettings = data;
+    });
   }
   load_new_users(){
     this.newusers = [];
@@ -46,9 +50,11 @@ export class UserProvider {
     .map(res => res.json())
   }
   get_store_about_us(){
-    this.newusers = [];
     return this.http.get(this.url+'/atomic_id/table/store_about_us')
     .map(res => res.json())
+  }
+  get_store_info(){
+    return this.storesettings;
   }
   switch_order_availability(value){
     let headers = new Headers();

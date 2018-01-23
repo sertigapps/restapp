@@ -23,6 +23,7 @@ export class ModalPostPage {
   public image_base : string = "https://s3.amazonaws.com/sertigs3/labarraapp/";
   loading: Loading;
   lastImage: string = null;
+  offercheck:boolean;
   image_uploaded: string = null;
   options:any;
   public title_button : string;
@@ -40,6 +41,10 @@ export class ModalPostPage {
     }
     else{
       this.post = this.params.get('post');
+      this.offercheck = false;
+      if(this.post.full_record.offer==1){
+        this.offercheck = true;
+      }
       if(this.post.full_record.image_url){
         this.image_uploaded = this.post.full_record.image_url;
       }
@@ -54,10 +59,14 @@ export class ModalPostPage {
    dismiss() {
     this.viewCtrl.dismiss();
   }
+  switchOffer(){if(this.offercheck===true){
+    this.post.full_record.offer = 1;
+  }else{
+    this.post.full_record.offer = -1;
+  }
+}
   submit(){
-    if(this.post.full_record.offer===true){
-      this.post.full_record.offer = 1;
-    }
+    
      this.loading = this.loadingCtrl.create({
     content:  this.translate.transform('saving')+' '+this.translate.transform('post'),
   });

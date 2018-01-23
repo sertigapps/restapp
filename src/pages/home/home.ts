@@ -24,9 +24,9 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.menuprovider.posts = this.menuprovider.posts.filter(function(item){
+    this.menuprovider.validposts = this.menuprovider.posts.filter(function(item){
       var valid = true;
-      if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+      if(item.full_record.offer ==1 && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
         valid = false;
       }
       return valid; 

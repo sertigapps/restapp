@@ -110,9 +110,9 @@
         </ion-item>
         <ion-item>
           <ion-label>{{'offer'|translation}}</ion-label>
-          <ion-checkbox name="offerflag" [(ngModel)]="item.full_record.offer"></ion-checkbox>
+          <ion-checkbox name="offerflag" [(ngModel)]="offercheck" (ionChange)="switchOffer()"></ion-checkbox>
         </ion-item>
-        <ion-item *ngIf="item.full_record.offer">
+        <ion-item *ngIf="item.full_record.offer == 1">
           <ion-label>{{'days'|translation}}</ion-label>
           <ion-select [(ngModel)]="item.full_record.days" name="daysoffer" multiple="true" cancelText="{{'cancel'|translation}}" okText="{{'done'|translation}}">
               

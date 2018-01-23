@@ -16,6 +16,7 @@ export class MenuProvider {
   menus : Array<Item> = [];
   ingredients : Array<Ingredient> = [];
   posts : Array<Post> = [];
+  validposts : Array<Post> = [];
   constructor(public http: Http) {
     console.log('Hello MenuProvider Provider');
     this.http.get(this.url+'query/category/status_code/1/EQ')
@@ -55,14 +56,14 @@ export class MenuProvider {
       data.forEach(c=>{
         this.posts.push(new Post(c.id,c.title,c,this.http));
       });
-      this.posts = this.posts.filter(function(item){
+      this.validposts = this.posts.filter(function(item){
         var valid = true;
-        if(item.full_record.offer && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
+        if(item.full_record.offer == 1 && item.full_record.days && item.full_record.days.indexOf((new Date()).getDay().toString()) < 0){
           valid = false;
         }
         return valid; 
       });
-      this.posts.sort((a,b)=>{
+      this.validposts.sort((a,b)=>{
         return a.full_record.create_date - b.full_record.create_date;
       })
     });

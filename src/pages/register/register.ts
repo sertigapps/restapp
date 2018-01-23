@@ -17,6 +17,13 @@ export class RegisterPage {
    }
  
   public register() {
+    let regExp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    
+        if (!regExp.test(this.registerCredentials.email)) {
+          
+        this.showPopup(this.translate.transform('invalid_email'), this.translate.transform('problem_creating_account'));
+          return ;
+        }
     let loading = this.loadingController.create({content : this.translate.transform('registering_message')});
     loading.present();
     this.auth.register(this.registerCredentials).subscribe(res => {

@@ -22,7 +22,7 @@
 
 
 <ion-content padding>
-  <ion-card *ngFor="let c of menuprovider.posts">
+  <ion-card *ngFor="let c of menuprovider.validposts">
   <img *ngIf="c.full_record.image_url" src="{{c.full_record.image_url}}"/>
   <ion-card-content>
     <ion-card-title>{{c.full_record.title}}

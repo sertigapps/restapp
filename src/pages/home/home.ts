@@ -35,7 +35,9 @@ export class HomePage {
   }
   
  
-
+  public openLocalAccounts() {
+    this.navCtrl.push('AccountsPage');
+  }
 public openAdmin(){
   this.navCtrl.push('AdminPage');
 }

@@ -1,5 +1,6 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs'
 
 export class Order {
   id:number;
@@ -22,6 +23,7 @@ export class Order {
     this.http=http;
     this.create_label = (new Date(create_date)).toLocaleString();
     this.full_record = full_record;
+    this.base_record = JSON.parse(JSON.stringify(full_record));
   }
   advance(emailaddress,token,estimated_time){
     let headers = new Headers();
@@ -128,6 +130,45 @@ export class Order {
         });
       });
     });
+  }
+  save(emailaddress, token) {
+    if (this.id === 0) {
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      let options = new RequestOptions({ headers: headers });
+      headers.append('sertig_token', token.toString());
+      headers.append('sertig_email', emailaddress.toString());
+      Object.keys(this.full_record).forEach(attr => {
+        if (this.full_record[attr] == [] || this.full_record[attr] == "" || this.full_record[attr] == [""]) {
+          delete this.full_record[attr];
+        }
+      });
+      let data = { item: this.full_record };
+      return this.http.post('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order', JSON.stringify(data), options)
+        .map(res => res.json());
+    }
+    else {
+      var attr_to_change = {};
+      var counter = 0;
+      Object.keys(this.full_record).forEach(attr => {
+        if (this.full_record[attr] !== this.base_record[attr] && (this.full_record[attr] != [] && this.full_record[attr] != "" && this.full_record[attr] != [""])) {
+          attr_to_change[attr] = this.full_record[attr];
+          counter++;
+        }
+      });
+      if (counter) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+        headers.append('sertig_token', token.toString());
+        headers.append('sertig_email', emailaddress.toString());
+        return this.http.put('https://nopmb791la.execute-api.us-east-1.amazonaws.com/devapp/order/id/' + this.id, JSON.stringify(attr_to_change), options)
+          .map(res => res.json());
+      }
+      else {
+        return Observable.of({}).delay(500);
+      }
+    }
   }
 
 }

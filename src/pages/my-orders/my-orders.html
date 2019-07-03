@@ -7,6 +7,10 @@
       {{'my_orders'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
+
+    <button (click)="openLocalAccounts()" ion-button icon-only>
+      <ion-icon name='cart'></ion-icon>
+    </button>
         <button  (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
             <ion-icon name='list'></ion-icon>
             <ion-badge *ngIf="cartprovider.new_orders">

@@ -161,6 +161,9 @@ qty_change(qty){
   toggleSection(c){
     this.sections_open[c] = !this.sections_open[c];
   }
+  addToOther(){
+    this.navCtrl.push('ChangeaccountPage');
+  }
   calculate_price_ingredients(c,index){
     if(!index){
       index = 'base';
@@ -184,7 +187,7 @@ qty_change(qty){
   create_order(){
     this.disabled_order= true;
     this.userprovider.get_store_settings().subscribe((data)=>{
-      if(data['orders_available']!=1){
+      if (data['orders_available'] != 1 && this.userprovider.user.full_record.admin_flag != 1){
         let alert = this.alertCtrl.create({
           title: this.translate.transform('order_not_created'),
           subTitle: this.translate.transform('orders_disabled'),
@@ -200,7 +203,7 @@ qty_change(qty){
         });
         alert.present();
       }
-      else if(data['available_'+this.item.id] && data['available_'+this.item.id]!=1){
+      else if (data['available_' + this.item.id] && data['available_' + this.item.id] != 1 && this.userprovider.user.full_record.admin_flag != 1){
           let alert = this.alertCtrl.create({
             title: this.translate.transform('order_not_created'),
             subTitle: this.translate.transform('item_unavailable'),
@@ -217,12 +220,18 @@ qty_change(qty){
           alert.present();
       }
       else{
+        let message = this.translate.transform('confirm_order_msg1') + ' Q ' + this.total + this.translate.transform('confirm_order_msg2');
+        let order_now_msg = this.translate.transform('order_now');
+        if(this.userprovider.user.full_record.admin_flag==1){
+          message = this.translate.transform('confirm_order_msg1_admin') + this.userprovider.account_selected.name + this.translate.transform('confirm_order_msg2_admin') + ' Q ' + this.total;
+          order_now_msg = this.translate.transform('add');
+        }
         let alert = this.alertCtrl.create({
           title: this.translate.transform('confirm_order'),
-          subTitle: this.translate.transform('confirm_order_msg1')+' Q '+this.total+this.translate.transform('confirm_order_msg2'),
+          subTitle: message,
           buttons: [
             {
-              text:this.translate.transform('order_now'),
+              text:order_now_msg,
               handler: data => {
                 var order = {
                               'personid':this.userprovider.user.full_record.id,
@@ -230,6 +239,13 @@ qty_change(qty){
                               'stage':1,
                               'create_date':(new Date()).getTime()
                             };
+                var notify = true;
+                if (this.userprovider.user.full_record.admin_flag == 1 && this.userprovider.account_selected ) {
+                  order['account_id'] = this.userprovider.account_selected.id; 
+                  order['account_name'] = this.userprovider.account_selected.name;
+                  order['status_code'] = 3;
+                  notify = false;
+                }
                 if(this.userprovider.user.full_record.phonenumber){
                   order['phonenumber'] = this.userprovider.user.full_record.phonenumber;
                 }
@@ -251,9 +267,10 @@ qty_change(qty){
                         
                         var current_item = this.menuprovider.getitem(element,contador.toString());
                         element = current_item.id;
-                        var title = current_item.name;
+                        var subcatname = (current_item.full_record.subcategory_id)? this.menuprovider.get_subcategory_name(current_item.full_record.subcategory_id)+' - ':'';
+                        var title = subcatname + current_item.name;
                         if(current_item.full_record.price_label.length >1){
-                          title = current_item.name + ' - ' +this.item_type_selected[element.split(',')[0]];
+                          title = subcatname +current_item.name + ' - ' +this.item_type_selected[element.split(',')[0]];
                         }
                         var no = [];
                         if(this.ingredients_item[element.split(',')[0]]){
@@ -315,20 +332,20 @@ qty_change(qty){
                   content: this.translate.transform('placing_order'),
                 });
                 this.loading.present();
-                this.cartprovider.notify_new_order(this.userprovider.user.emailaddress).subscribe((notif_data)=>{
+                this.cartprovider.notify_new_order(this.userprovider.user.emailaddress,notify).subscribe((notif_data)=>{
                   this.cartprovider.place_order_request(order,this.userprovider.user.emailaddress,this.userprovider.user.token).subscribe((data)=>{
                     this.item.add_order(this.userprovider.emailaddress,this.userprovider.token);
-                    this.cartprovider.add_order(data);
+                    this.cartprovider.add_order(data,notify);
+                    let ready_msg = (notify) ? this.translate.transform('ready_msg'):'';
                     let alert = this.alertCtrl.create({
                       title: this.translate.transform('order_created'),
-                      subTitle:this.translate.transform('ready_msg'),
+                      subTitle: ready_msg,
                       buttons: [
                         {
                           text: 'OK',
                           handler: data => {
                             this.loading.dismissAll();
                             this.navCtrl.pop();
-                            
                           }
                         }
                       ]

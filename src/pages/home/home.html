@@ -7,6 +7,9 @@
       {{'news'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
+    <button (click)="openLocalAccounts()" ion-button icon-only>
+      <ion-icon name='cart'></ion-icon>
+    </button>
         <button (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
             <ion-icon name='list'></ion-icon>
             <ion-badge *ngIf="cartprovider.new_orders">
@@ -22,6 +25,17 @@
 
 
 <ion-content padding>
+  <ion-card text-center *ngIf="menuprovider.postsloading">
+    <ion-spinner class="spinner_big" name="bubbles">
+    </ion-spinner>
+    <ion-card-content> <p>{{'loading'|translation}}</p>
+      </ion-card-content>
+  </ion-card>
+  <ion-card text-center *ngIf="!menuprovider.postsloading && menuprovider.validposts.length==0">
+    <ion-card-content>
+      <p>{{'empty_posts'|translation}}</p>
+    </ion-card-content>
+  </ion-card>
   <ion-card *ngFor="let c of menuprovider.validposts">
   <img *ngIf="c.full_record.image_url" src="{{c.full_record.image_url}}"/>
   <ion-card-content>

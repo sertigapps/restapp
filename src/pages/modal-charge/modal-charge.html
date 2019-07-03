@@ -1,0 +1,86 @@
+<!--
+  Generated template for the ModalChargePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{'account'|translation}} : {{account.name}} </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">{{'cancel'|translation}}</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button showWhen="browser" (click)="dismiss()">
+        <span ion-text color="primary" >{{'cancel'|translation}}</span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<ion-card *ngFor="let c of accountOrders">
+  <ion-row>
+    <ion-col col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2>
+      <ion-item>
+        <ion-checkbox (click)="updateTotalSelected()" [(ngModel)]="orderSelected[c.id]"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+    <ion-col  col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+
+      <p *ngFor="let y of c.full_record.title;let i = index;">
+        <ion-badge item-right color="azul" *ngIf="c.full_record.quantity">
+          {{c.full_record.quantity}}
+        </ion-badge>&nbsp;{{y}}</p>
+    </ion-col>
+    <ion-col col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4>
+      <button type="button" (click)="toggleSection(c.id)" ion-item detail-none>
+          <ion-badge item-right *ngIf="c.total">
+              Q {{c.total}}
+            </ion-badge>
+                  <ion-icon item-right name="arrow-down" *ngIf="!sections_open[c.id]"></ion-icon>
+                  <ion-icon item-right name="arrow-up" *ngIf="sections_open[c.id]"></ion-icon>
+                  
+                </button>
+    </ion-col>
+  </ion-row>
+  <ion-card-content>
+    <ion-row *ngIf="sections_open[c.id]">
+      <ion-col *ngFor="let y of c.full_record.title;let i = index;" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+
+        <p>
+          <ion-badge item-right color="azul" *ngIf="c.full_record.quantity">
+            {{c.full_record.quantity}}
+          </ion-badge>&nbsp;{{y}}</p>
+
+        <ion-badge color="danger" *ngFor="let z of c.full_record.no[i]">
+          {{z}}&nbsp;
+        </ion-badge>
+        <ion-badge color="secondary" *ngFor="let w of c.full_record.extra[i]">
+          {{w}}&nbsp;
+        </ion-badge>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="sections_open[c.id] && c.full_record.comment_order">
+      <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+        <p> {{c.full_record.comment_order}}</p>
+
+      </ion-col>
+    </ion-row>
+    </ion-card-content>
+    </ion-card>
+
+<button (click)="chargeAll()" ion-button full color="secondary" item-end icon-only>
+            <ion-icon clear  name="dollar"></ion-icon>{{'charge_all'|translation}} Q{{account.full_record.total}}
+          </button>
+<button (click)="chargeSelected()" ion-button full color="secondary" item-end icon-only>
+            <ion-icon clear  name="dollar"></ion-icon>{{'charge_selected'|translation}} Q{{total_selected}} 
+          </button>
+</ion-content>

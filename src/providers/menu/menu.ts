@@ -15,9 +15,13 @@ export class MenuProvider {
   items : Array<Item> = [];
   menus : Array<Item> = [];
   ingredients : Array<Ingredient> = [];
+  postsloading: boolean = true;
+  menuloading: boolean = true;
   posts : Array<Post> = [];
   validposts : Array<Post> = [];
   constructor(public http: Http) {
+    this.postsloading = true;
+    this.menuloading = true;
     console.log('Hello MenuProvider Provider');
     this.http.get(this.url+'query/category/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
@@ -25,6 +29,7 @@ export class MenuProvider {
         this.categories.push(new Category(c.id,c.name,c,this.http));
       });
       this.ordercategories();
+      this.menuloading = false;
     });
     this.http.get(this.url+'query/subcategory/status_code/1/EQ')
     .map(res => res.json()).subscribe(data=>{
@@ -66,6 +71,7 @@ export class MenuProvider {
       this.validposts.sort((a,b)=>{
         return a.full_record.create_date - b.full_record.create_date;
       })
+      this.postsloading = false;
     });
   }
   ordercategories(){
@@ -218,5 +224,14 @@ export class MenuProvider {
     this.posts = this.posts.filter(p=>{
       return p.id!=post.id;
     }); 
+  }
+  get_subcategory_name(id) {
+    let name = "no encontrado";
+    this.sub_categories.forEach((sc)=>{
+      if(id==sc.id){
+        name = sc.name;
+      }
+    });
+    return name;
   }
 }

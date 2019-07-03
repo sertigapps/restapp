@@ -205,6 +205,7 @@ export class MyApp {
                     });
                     if(this.userprovider.user.full_record.admin_flag &&this.userprovider.user.full_record.admin_flag!=0){
                       this.cartprovider.fetch_new_orders();
+                      this.cartprovider.getAccounts();
                     }
                     this.cartprovider.fetch_my_orders(this.userprovider.user.emailaddress);
                     this.nav.setRoot('HomePage');
@@ -252,7 +253,7 @@ export class MyApp {
   console.log('push setup');
   const options: PushOptions = {
       android: {
-          //  senderID: '1066733044729',
+          senderID: '1066733044729',
           sound:true,
           vibrate:true
       },

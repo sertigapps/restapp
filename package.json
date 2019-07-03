@@ -67,7 +67,9 @@
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
         "uk.co.workingedge.phonegap.plugin.launchnavigator": "^4.0.6",
-        "zone.js": "0.8.12"
+        "zone.js": "0.8.12",
+        "cordova-browser": "^4.1.0",
+        "info.protonet.imageresizer": "^0.1.1"
     },
     "devDependencies": {
         "@ionic/app-scripts": "2.1.3",
@@ -98,9 +100,11 @@
             },
             "phonegap-plugin-push": {
                 "SENDER_ID": "1066733044729"
-            }
+            },
+            "info.protonet.imageresizer": {}
         },
         "platforms": [
+            "browser",
             "ios"
         ]
     }

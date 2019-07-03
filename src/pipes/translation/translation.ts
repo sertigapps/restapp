@@ -14,7 +14,9 @@ import { UserProvider } from '../../providers/user/user';
 @Injectable()
 export class TranslationPipe implements PipeTransform {
   translations:Object={
-    'home':{'es':'Inicio','en':'Home'},
+    'home': { 'es': 'Inicio', 'en': 'Home' },
+    'charge_all': { 'es': 'Cobrar Todo', 'en': 'Charge All' },
+    'charge_selected': { 'es': 'Cobrar Seleccionadas', 'en': 'Charge Selected' },
     'approve_users':{'es':'Aprobar Usuarios','en':'Approve Users'},
     'invalid_email':{'es':'Correo Electronico Invalido','en':'Invalid Email'},
     'about_us':{'es':'Quienes Somos','en':'About Us'},
@@ -30,7 +32,11 @@ export class TranslationPipe implements PipeTransform {
     'sub_categories':{'es':'Sub Categorias','en':'Sub Categories'},
     'menus':{'es':'Menus','en':'Menus'},
     'items':{'es':'Articulos','en':'Items'},
-    'ingredients':{'es':'Ingredientes','en':'Ingredients'},
+    'ingredients': { 'es': 'Ingredientes', 'en': 'Ingredients' },
+    'see': { 'es': 'Ver', 'en': 'See' },
+    'new_account': { 'es': 'Nueva Cuenta', 'en': 'New Account' },
+    'charge': { 'es': 'Cobrar', 'en': 'Charge' },
+    'accounts': { 'es': 'Cuentas', 'en': 'Accounts' },
     'offer':{'es':'Oferta','en':'Offer'},
     'posts':{'es':'Posts','en':'Posts'},
     'edit':{'es':'Editar','en':'Edit'},
@@ -53,7 +59,13 @@ export class TranslationPipe implements PipeTransform {
     'delete_sc_msg':{'es':'Esto borrara todos los articulos ','en':'This will delete all items'},
     'login_message':{'es':'Iniciando sesion, por favor espere .... ','en':'Login in, please wait ....'},
     'cancel':{'es':'Cancelar','en':'Cancel'},
-    'create':{'es':'Crear','en':'Create'},
+    'account': { 'es': 'Cuenta', 'en': 'Account' },
+    'create': { 'es': 'Crear', 'en': 'Create' },
+    'confirm_order_msg1_admin': { 'es': 'Esta seguro que desea agregar a la cuenta : ', 'en': 'Are you sure you want to add to account :' },
+    'confirm_order_msg2_admin': { 'es': ' el total de ', 'en': ' the total of ' },
+    'add_to': { 'es': 'Agregar a Cuenta:', 'en': 'Add to Account:' },
+    'add': { 'es': 'Agregar', 'en': 'Add' },
+    'add_to_other': { 'es': 'Agregar a Otra Cuenta', 'en': 'Add to Other Account' },
     'title':{'es':'Titulo','en':'Title'},
     'text':{'es':'Texto','en':'Text'},
     'save':{'es':'Guardar','en':'Save'},
@@ -208,7 +220,9 @@ export class TranslationPipe implements PipeTransform {
     'orange':{'es':'Anaranjado','en':'Orange'},
     'confirm_block_user':{'es':'Esta seguro de querer bloquear al usuario ?','en':'Are you sure you want to block the user ?'},
     'orders_disabled':{'es':'Lo sentimos, en este momento estamos cerrados!','en':'We are sorry, we are closed at this moment!'},
-    'general_settings':{'es':'Configuracion','en':'Settings'}
+    'general_settings': { 'es': 'Configuracion', 'en': 'Settings' },
+    'empty_posts': { 'es': 'No hay posts', 'en': 'No posts' },
+    'empty_menu': { 'es': 'No hay menu', 'en': 'No menu' }
   };
   constructor(public userprovider: UserProvider) {
         }

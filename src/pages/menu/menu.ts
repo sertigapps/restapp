@@ -27,7 +27,10 @@ export class MenuPage {
   }
   
  
+  public openLocalAccounts() {
+    this.navCtrl.push('AccountsPage');
 
+}
 public openAdmin(){
   this.navCtrl.push('AdminPage');
 }

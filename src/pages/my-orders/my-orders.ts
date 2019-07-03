@@ -36,6 +36,10 @@ export class MyOrdersPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad My oRDERS ');
   }
+  public openLocalAccounts() {
+    this.navCtrl.push('AccountsPage');
+
+  }
 public openAdmin(){
   this.navCtrl.push('AdminPage');
 }

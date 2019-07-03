@@ -143,10 +143,18 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+          <ion-col *ngIf="!(userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1)" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
               <button  ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid || disabled_order">
                   <ion-icon item-right name="cart" ></ion-icon>
                   {{'order'|translation}}</button>
+            </ion-col>
+            <ion-col *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+              <button *ngIf="userprovider.account_selected" ion-button class="submit-btn" full type="submit" [disabled]="!itemform.form.valid || disabled_order">
+                  <ion-icon item-right name="cart" ></ion-icon>
+                  {{'add_to'|translation}} {{userprovider.account_selected.name}}</button>
+              <button ion-button class="submit-btn" type="button" full (click)="addToOther()" >
+                  <ion-icon item-right name="cart" ></ion-icon>
+                  {{'add_to_other'|translation}}</button>
             </ion-col>
             </ion-row>
       </ion-card>

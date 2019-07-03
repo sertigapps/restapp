@@ -41,6 +41,7 @@ export class SaleReportPage {
     this.loading_report = true;
     this.cartprovider.fetch_report_orders(this.startdate,this.enddate).subscribe(data=>{
       this.loading_report = false;
+      this.report_orders = [];
       data.forEach(c=>{
         this.report_orders.push(new Order(c.id,c.emailaddress,c.personid,c.create_date,c.total,c,this.http));
       });

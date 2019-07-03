@@ -7,6 +7,9 @@
       {{'our_menu'|translation}}
     </ion-title>
     <ion-buttons *ngIf="userprovider.user && userprovider.user.full_record.admin_flag && userprovider.user.full_record.admin_flag==1" end>
+      <button (click)="openLocalAccounts()" ion-button icon-only>
+      <ion-icon name='cart'></ion-icon>
+    </button>
         <button (click)="navCtrl.push('OrderViewPage')"  ion-button icon-only>
             <ion-icon name='list'></ion-icon>
             <ion-badge *ngIf="cartprovider.new_orders">
@@ -25,6 +28,18 @@
     <ion-fab right bottom>
         <button (click)="see_top()" ion-fab color="yellow" ><ion-icon name="star"></ion-icon>TOP</button>
       </ion-fab>
+  <ion-card text-center *ngIf="menuprovider.menuloading">
+    <ion-spinner class="spinner_big" name="bubbles">
+    </ion-spinner>
+    <ion-card-content>
+      <p>{{'loading'|translation}}</p>
+    </ion-card-content>
+  </ion-card>
+  <ion-card text-center *ngIf="!menuprovider.menuloading && menuprovider.categories.length==0">
+    <ion-card-content>
+      <p>{{'empty_menu'|translation}}</p>
+    </ion-card-content>
+  </ion-card>
   <ion-card class="min_height_card" *ngFor="let c of menuprovider.categories" (click)="seecategory(c)">
    <img *ngIf="c.full_record.image_url" src="{{c.full_record.image_url}}"/>
     <div class="card-title" [ngStyle]="{'color': c.full_record.text_color}" >{{c.name}}</div>

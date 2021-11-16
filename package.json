@@ -35,7 +35,7 @@
         "@ionic-native/transfer": "^3.14.0",
         "@ionic/storage": "2.0.1",
         "@types/node": "^8.0.25",
-        "aws-sdk": "^2.104.0",
+        "aws-sdk": "^2.814.0",
         "call-number": "^1.0.1",
         "cordova": "^7.1.0",
         "cordova-ios": "4.5.4",
